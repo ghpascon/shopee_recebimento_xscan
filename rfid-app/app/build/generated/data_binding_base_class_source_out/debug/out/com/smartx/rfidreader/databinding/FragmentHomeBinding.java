@@ -4,25 +4,68 @@ package com.smartx.rfidreader.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
+import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.smartx.rfidreader.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
+import java.lang.String;
 
 public final class FragmentHomeBinding implements ViewBinding {
   @NonNull
-  private final FrameLayout rootView;
+  private final ConstraintLayout rootView;
 
-  private FragmentHomeBinding(@NonNull FrameLayout rootView) {
+  @NonNull
+  public final MaterialButton btnConfirm;
+
+  @NonNull
+  public final MaterialCardView cardTags;
+
+  @NonNull
+  public final MaterialCardView cardTotalLido;
+
+  @NonNull
+  public final RecyclerView recyclerEpcs;
+
+  @NonNull
+  public final View statusDot;
+
+  @NonNull
+  public final LinearLayout statusRow;
+
+  @NonNull
+  public final TextView textStatusHome;
+
+  @NonNull
+  public final TextView textTotalLido;
+
+  private FragmentHomeBinding(@NonNull ConstraintLayout rootView,
+      @NonNull MaterialButton btnConfirm, @NonNull MaterialCardView cardTags,
+      @NonNull MaterialCardView cardTotalLido, @NonNull RecyclerView recyclerEpcs,
+      @NonNull View statusDot, @NonNull LinearLayout statusRow, @NonNull TextView textStatusHome,
+      @NonNull TextView textTotalLido) {
     this.rootView = rootView;
+    this.btnConfirm = btnConfirm;
+    this.cardTags = cardTags;
+    this.cardTotalLido = cardTotalLido;
+    this.recyclerEpcs = recyclerEpcs;
+    this.statusDot = statusDot;
+    this.statusRow = statusRow;
+    this.textStatusHome = textStatusHome;
+    this.textTotalLido = textTotalLido;
   }
 
   @Override
   @NonNull
-  public FrameLayout getRoot() {
+  public ConstraintLayout getRoot() {
     return rootView;
   }
 
@@ -43,10 +86,62 @@ public final class FragmentHomeBinding implements ViewBinding {
 
   @NonNull
   public static FragmentHomeBinding bind(@NonNull View rootView) {
-    if (rootView == null) {
-      throw new NullPointerException("rootView");
-    }
+    // The body of this method is generated in a way you would not otherwise write.
+    // This is done to optimize the compiled bytecode for size and performance.
+    int id;
+    missingId: {
+      id = R.id.btnConfirm;
+      MaterialButton btnConfirm = ViewBindings.findChildViewById(rootView, id);
+      if (btnConfirm == null) {
+        break missingId;
+      }
 
-    return new FragmentHomeBinding((FrameLayout) rootView);
+      id = R.id.cardTags;
+      MaterialCardView cardTags = ViewBindings.findChildViewById(rootView, id);
+      if (cardTags == null) {
+        break missingId;
+      }
+
+      id = R.id.cardTotalLido;
+      MaterialCardView cardTotalLido = ViewBindings.findChildViewById(rootView, id);
+      if (cardTotalLido == null) {
+        break missingId;
+      }
+
+      id = R.id.recyclerEpcs;
+      RecyclerView recyclerEpcs = ViewBindings.findChildViewById(rootView, id);
+      if (recyclerEpcs == null) {
+        break missingId;
+      }
+
+      id = R.id.statusDot;
+      View statusDot = ViewBindings.findChildViewById(rootView, id);
+      if (statusDot == null) {
+        break missingId;
+      }
+
+      id = R.id.statusRow;
+      LinearLayout statusRow = ViewBindings.findChildViewById(rootView, id);
+      if (statusRow == null) {
+        break missingId;
+      }
+
+      id = R.id.textStatusHome;
+      TextView textStatusHome = ViewBindings.findChildViewById(rootView, id);
+      if (textStatusHome == null) {
+        break missingId;
+      }
+
+      id = R.id.textTotalLido;
+      TextView textTotalLido = ViewBindings.findChildViewById(rootView, id);
+      if (textTotalLido == null) {
+        break missingId;
+      }
+
+      return new FragmentHomeBinding((ConstraintLayout) rootView, btnConfirm, cardTags,
+          cardTotalLido, recyclerEpcs, statusDot, statusRow, textStatusHome, textTotalLido);
+    }
+    String missingId = rootView.getResources().getResourceName(id);
+    throw new NullPointerException("Missing required view with ID: ".concat(missingId));
   }
 }

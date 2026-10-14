@@ -3,6 +3,7 @@ package com.smartx.rfidreader.ui.base
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
@@ -70,6 +71,11 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         _baseBinding.footerApp.footerAppVersion.text =
             getString(R.string.footer_app_version, appVersion)
         _baseBinding.footerApp.footerUserInfo.text = getString(R.string.footer_user_not_authenticated)
+        _baseBinding.footerApp.footerLogoutButton.visibility = View.GONE
+        _baseBinding.footerApp.footerLogoutButton.setOnClickListener {
+            xtrack_manager.logout()
+            onLogoutPressed()
+        }
 
         // Observa o estado global do leitor — atualiza header em TODAS as telas automaticamente
         observeReaderState()
@@ -110,13 +116,16 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
                 }
                 launch {
                     xtrack_manager.currentUser.collect { user ->
+                        val isLoggedIn = user != null
+                        _baseBinding.footerApp.footerLogoutButton.visibility =
+                            if (isLoggedIn) View.VISIBLE else View.GONE
+
                         _baseBinding.footerApp.footerUserInfo.text = if (user == null) {
                             getString(R.string.footer_user_not_authenticated)
                         } else {
                             getString(
-                                R.string.footer_user_department,
-                                user.name.ifBlank { user.login },
-                                user.departmentName.ifBlank { "-" }
+                                R.string.footer_user_logged,
+                                user.name.ifBlank { user.login }
                             )
                         }
                     }
@@ -124,6 +133,8 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
             }
         }
     }
+
+    protected open fun onLogoutPressed() {}
 
     /**
      * Retorna o ViewBinding do layout específico desta tela.

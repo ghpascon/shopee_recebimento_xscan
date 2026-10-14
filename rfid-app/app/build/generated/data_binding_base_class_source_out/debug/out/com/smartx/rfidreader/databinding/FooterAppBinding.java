@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
 import com.smartx.rfidreader.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -26,13 +27,18 @@ public final class FooterAppBinding implements ViewBinding {
   public final TextView footerDeviceId;
 
   @NonNull
+  public final MaterialButton footerLogoutButton;
+
+  @NonNull
   public final TextView footerUserInfo;
 
   private FooterAppBinding(@NonNull LinearLayout rootView, @NonNull TextView footerAppVersion,
-      @NonNull TextView footerDeviceId, @NonNull TextView footerUserInfo) {
+      @NonNull TextView footerDeviceId, @NonNull MaterialButton footerLogoutButton,
+      @NonNull TextView footerUserInfo) {
     this.rootView = rootView;
     this.footerAppVersion = footerAppVersion;
     this.footerDeviceId = footerDeviceId;
+    this.footerLogoutButton = footerLogoutButton;
     this.footerUserInfo = footerUserInfo;
   }
 
@@ -75,6 +81,12 @@ public final class FooterAppBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.footerLogoutButton;
+      MaterialButton footerLogoutButton = ViewBindings.findChildViewById(rootView, id);
+      if (footerLogoutButton == null) {
+        break missingId;
+      }
+
       id = R.id.footerUserInfo;
       TextView footerUserInfo = ViewBindings.findChildViewById(rootView, id);
       if (footerUserInfo == null) {
@@ -82,7 +94,7 @@ public final class FooterAppBinding implements ViewBinding {
       }
 
       return new FooterAppBinding((LinearLayout) rootView, footerAppVersion, footerDeviceId,
-          footerUserInfo);
+          footerLogoutButton, footerUserInfo);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

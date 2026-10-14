@@ -3308,6 +3308,7 @@ id btnClearPrefixes
 id btnClearScanned
 id btnClearTags
 id btnClearTargets
+id btnConfirm
 id btnConnect
 id btnDeleteAll
 id btnDeleteEvent
@@ -3315,6 +3316,7 @@ id btnDialogSave
 id btnDialogUseExample
 id btnDisconnect
 id btnExportCsv
+id btnGoLogin
 id btnLogCancel
 id btnLogClose
 id btnLogin
@@ -3346,6 +3348,8 @@ id cardFinalResult
 id cardPower
 id cardReaderConfig
 id cardSync
+id cardTags
+id cardTotalLido
 id cardWebhook
 id cardWebhookStatus
 id carryVelocity
@@ -3461,6 +3465,7 @@ id floating
 id footerApp
 id footerAppVersion
 id footerDeviceId
+id footerLogoutButton
 id footerUserInfo
 id forever
 id fragmentContainer
@@ -3664,6 +3669,7 @@ id radio
 id ratio
 id rectangles
 id recyclerBleDevices
+id recyclerEpcs
 id recyclerViewEvents
 id recyclerViewProgress
 id recyclerViewReaders
@@ -3741,6 +3747,8 @@ id startVertical
 id staticLayout
 id staticPostLayout
 id statusBanner
+id statusDot
+id statusRow
 id stop
 id stretch
 id submenuarrow
@@ -3794,6 +3802,7 @@ id textSpacerNoButtons
 id textSpacerNoTitle
 id textStart
 id textStatusDetail
+id textStatusHome
 id textStatusTime
 id textSubtitle
 id textSyncItemLabel
@@ -3807,6 +3816,7 @@ id textTid
 id textTime
 id textTitle
 id textTop
+id textTotalLido
 id textWebhookStatus
 id textWebhookSummary
 id textWebhookTagCount
@@ -4018,6 +4028,7 @@ layout ime_base_split_test_activity
 layout ime_secondary_split_test_activity
 layout item_ble_device
 layout item_event
+layout item_home_epc
 layout item_radar_scan_tag
 layout item_radar_target
 layout item_reader
@@ -4149,6 +4160,7 @@ string btn_connect
 string btn_delete_all
 string btn_disconnect
 string btn_export_csv
+string btn_go_login_screen
 string btn_log_close
 string btn_open_reader_config
 string btn_reload_config
@@ -4252,7 +4264,8 @@ string fab_transformation_scrim_behavior
 string fab_transformation_sheet_behavior
 string footer_app_version
 string footer_device_id
-string footer_user_department
+string footer_logout
+string footer_user_logged
 string footer_user_not_authenticated
 string helper_buzzer
 string helper_power
@@ -4264,7 +4277,11 @@ string hint_power
 string hint_prefix
 string hint_webhook_url
 string hint_xtrack_url
+string home_btn_confirm
+string home_confirm_todo
 string home_subtitle
+string home_tags_section_title
+string home_total_lido_title
 string icon_content_description
 string inventory_name_hint
 string inventory_name_required

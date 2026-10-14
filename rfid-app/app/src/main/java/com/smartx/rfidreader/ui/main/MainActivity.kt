@@ -55,16 +55,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         observeHeader()
 
         if (savedInstanceState == null) {
-            if (viewModel.uiState.value.isAuthenticated) {
-                loadHome()
-            } else {
-                loadLogin()
-            }
+            loadHomeOrLogin()
+        }
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            enforceAuthOnHome()
         }
 
         setupBackHandler()
         setupHeaderAccessGesture()
         observeNavigation()
+    }
+
+    private fun loadHomeOrLogin() {
+        if (viewModel.uiState.value.isAuthenticated) loadHome() else loadLogin()
     }
 
     private fun observeHeader() {
@@ -105,7 +109,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     fun goHome() {
         supportFragmentManager.popBackStackImmediate(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        loadHome()
+        loadHomeOrLogin()
+    }
+
+    private fun enforceAuthOnHome() {
+        val current = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+        if (current is HomeFragment && !viewModel.uiState.value.isAuthenticated) {
+            loadLogin()
+        }
     }
 
     /** Navega para um fragmento, adicionando ao back stack */
@@ -131,6 +142,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             override fun handleOnBackPressed() {
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     supportFragmentManager.popBackStack()
+                    binding.root.post { enforceAuthOnHome() }
                 } else {
                     val now = SystemClock.elapsedRealtime()
                     if (now - backPressedTime < 2000L) {
@@ -218,6 +230,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
         }
         return super.dispatchKeyEvent(event)
+    }
+
+    override fun onLogoutPressed() {
+        viewModel.disconnect()
+        supportFragmentManager.popBackStackImmediate(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        loadLogin()
     }
 
 }

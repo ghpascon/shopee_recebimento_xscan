@@ -62,7 +62,7 @@
                         android:id="@+id/editUsername"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textNoSuggestions|textCapCharacters"
+                        android:inputType="textNoSuggestions"
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
 

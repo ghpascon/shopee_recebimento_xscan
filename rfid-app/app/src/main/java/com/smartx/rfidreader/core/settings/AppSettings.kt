@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.map
 import java.io.IOException
 
 data class AppSettings(
-    val lastReaderId: String = "",
+    val lastReaderId: String = AppSettingsRepository.DEFAULT_READER_ID,
     val buzzerEnabled: Boolean = true,
     val rssiFilter: Int = -120,
     val prefixes: List<String> = emptyList(),
-    val xtrackUrl: String = "",
+    val xtrackUrl: String = AppSettingsRepository.DEFAULT_XTRACK_URL,
     val webhookUrl: String = "",
     val webhookIntervalSeconds: Int = 30,
     /** Último endereço MAC BLE selecionado (global) */
@@ -28,6 +28,8 @@ class AppSettingsRepository(context: Context) {
     private val store = context.applicationContext.dataStore
 
     companion object {
+        const val DEFAULT_READER_ID = "XR2"
+        const val DEFAULT_XTRACK_URL = "http://34.67.217.146:6101/req"
         private val KEY_READER_ID = stringPreferencesKey("last_reader_id")
         private val KEY_BUZZER = booleanPreferencesKey("buzzer_enabled")
         private val KEY_RSSI = intPreferencesKey("rssi_filter")
@@ -45,12 +47,12 @@ class AppSettingsRepository(context: Context) {
         .map { prefs ->
             val prefixStr = prefs[KEY_PREFIXES] ?: ""
             AppSettings(
-                lastReaderId = prefs[KEY_READER_ID] ?: "",
+                lastReaderId = prefs[KEY_READER_ID]?.takeIf { it.isNotBlank() } ?: DEFAULT_READER_ID,
                 buzzerEnabled = prefs[KEY_BUZZER] ?: true,
                 rssiFilter = prefs[KEY_RSSI] ?: -120,
                 prefixes = if (prefixStr.isBlank()) emptyList()
                            else prefixStr.split("|").filter { it.isNotBlank() },
-                xtrackUrl = prefs[KEY_XTRACK_URL] ?: "",
+                xtrackUrl = prefs[KEY_XTRACK_URL]?.takeIf { it.isNotBlank() } ?: DEFAULT_XTRACK_URL,
                 webhookUrl = prefs[KEY_WEBHOOK] ?: "",
                 webhookIntervalSeconds = prefs[KEY_WEBHOOK_INTERVAL] ?: 30,
                 lastBleAddress = prefs[KEY_LAST_BLE] ?: ""

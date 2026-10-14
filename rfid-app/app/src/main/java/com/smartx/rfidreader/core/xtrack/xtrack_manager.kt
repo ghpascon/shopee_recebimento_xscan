@@ -9,13 +9,9 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.w3c.dom.Element
-import org.xml.sax.InputSource
-import java.io.StringReader
 import java.security.MessageDigest
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-import javax.xml.parsers.DocumentBuilderFactory
 
 sealed interface XTrackLoginResult {
     data class Success(val user: XTrackUser) : XTrackLoginResult
@@ -26,22 +22,21 @@ data class XTrackUser(
     val id: String,
     val login: String,
     val name: String,
-    val departmentId: String,
-    val departmentName: String
+    val allowedDepartmentIds: List<String>
 )
+
+private data class ParsedRow(
+    val fields: Map<String, List<String>>
+) {
+    fun first(name: String): String = fields[name.uppercase(Locale.ROOT)]?.firstOrNull().orEmpty()
+    fun all(name: String): List<String> = fields[name.uppercase(Locale.ROOT)].orEmpty()
+}
 
 object xtrack_manager {
 
     private const val GET_USER_PAYLOAD = """
         <msg>
             <command>GetUser</command>
-            <terminal>ERP</terminal>
-        </msg>
-    """
-
-    private const val GET_DEPARTMENT_PAYLOAD = """
-        <msg>
-            <command>GetDepartment</command>
             <terminal>ERP</terminal>
         </msg>
     """
@@ -77,23 +72,24 @@ object xtrack_manager {
 
             val hashedPassword = md5Upper(normalizedPassword)
             val matched = users.firstOrNull { row ->
-                row["LOGIN"]?.uppercase(Locale.ROOT) == normalizedLogin &&
-                    row["PASSWORD"]?.uppercase(Locale.ROOT) == hashedPassword
+                row.first("LOGIN").uppercase(Locale.ROOT) == normalizedLogin &&
+                    row.first("PASSWORD").uppercase(Locale.ROOT) == hashedPassword
             } ?: return@runCatching XTrackLoginResult.Error("Usuário ou senha inválidos")
 
-            if (matched["ACTIVE"]?.trim() == "0") {
+            if (matched.first("ACTIVE").trim() == "0") {
                 return@runCatching XTrackLoginResult.Error("Usuário inativo")
             }
 
-            val departmentId = matched["DEPARTMENT"].orEmpty()
-            val departmentName = resolveDepartmentName(url, departmentId)
+            val allowedDepartmentIds = matched.all("DEPARTMENT")
+                .map { it.trim() }
+                .filter { it.isNotBlank() }
+                .distinct()
 
             val user = XTrackUser(
-                id = matched["ID"].orEmpty(),
-                login = matched["LOGIN"].orEmpty(),
-                name = matched["NAME"].orEmpty(),
-                departmentId = departmentId,
-                departmentName = departmentName
+                id = matched.first("ID"),
+                login = matched.first("LOGIN"),
+                name = matched.first("NAME"),
+                allowedDepartmentIds = allowedDepartmentIds
             )
             _currentUser.value = user
             XTrackLoginResult.Success(user)
@@ -104,16 +100,6 @@ object xtrack_manager {
 
     fun logout() {
         _currentUser.value = null
-    }
-
-    private fun resolveDepartmentName(xtrackUrl: String, departmentId: String): String {
-        if (departmentId.isBlank()) return "-"
-        val departmentsXml = postXml(xtrackUrl, GET_DEPARTMENT_PAYLOAD)
-        val departments = parseDataRows(departmentsXml)
-        return departments.firstOrNull { it["ID"] == departmentId }
-            ?.get("NAME")
-            ?.ifBlank { departmentId }
-            ?: departmentId
     }
 
     private fun postXml(url: String, payload: String): String {
@@ -133,35 +119,35 @@ object xtrack_manager {
         }
     }
 
-    private fun parseDataRows(xml: String): List<Map<String, String>> {
+    private fun parseDataRows(xml: String): List<ParsedRow> {
         if (xml.isBlank()) return emptyList()
+        val result = mutableListOf<ParsedRow>()
 
-        val factory = DocumentBuilderFactory.newInstance().apply {
-            isNamespaceAware = false
-            isXIncludeAware = false
-            runCatching { setFeature("http://apache.org/xml/features/disallow-doctype-decl", true) }
-            runCatching { setFeature("http://xml.org/sax/features/external-general-entities", false) }
-            runCatching { setFeature("http://xml.org/sax/features/external-parameter-entities", false) }
-        }
+        val dataRegex = Regex("<data>(.*?)</data>", setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE))
+        val fieldRegex = Regex("<([A-Za-z0-9_]+)>(.*?)</\\1>", setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE))
 
-        val builder = factory.newDocumentBuilder()
-        val doc = builder.parse(InputSource(StringReader(xml)))
-        val rows = doc.getElementsByTagName("data")
-        val result = mutableListOf<Map<String, String>>()
-
-        for (i in 0 until rows.length) {
-            val node = rows.item(i) as? Element ?: continue
-            val row = linkedMapOf<String, String>()
-            val children = node.childNodes
-            for (j in 0 until children.length) {
-                val child = children.item(j) as? Element ?: continue
-                row[child.tagName.uppercase(Locale.ROOT)] = child.textContent?.trim().orEmpty()
+        for (dataMatch in dataRegex.findAll(xml)) {
+            val block = dataMatch.groupValues[1]
+            val row = linkedMapOf<String, MutableList<String>>()
+            for (field in fieldRegex.findAll(block)) {
+                val key = field.groupValues[1].uppercase(Locale.ROOT)
+                val value = xmlUnescape(field.groupValues[2].trim())
+                row.getOrPut(key) { mutableListOf() }.add(value)
             }
             if (row.isNotEmpty()) {
-                result.add(row)
+                result.add(ParsedRow(row))
             }
         }
         return result
+    }
+
+    private fun xmlUnescape(value: String): String {
+        return value
+            .replace("&lt;", "<")
+            .replace("&gt;", ">")
+            .replace("&quot;", "\"")
+            .replace("&apos;", "'")
+            .replace("&amp;", "&")
     }
 
     private fun md5Upper(value: String): String {

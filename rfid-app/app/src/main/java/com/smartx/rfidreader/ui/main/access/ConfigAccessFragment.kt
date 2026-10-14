@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.smartx.rfidreader.databinding.FragmentConfigAccessBinding
 import com.smartx.rfidreader.ui.main.MainActivity
 import com.smartx.rfidreader.ui.main.config.ConfigFragment
+import com.smartx.rfidreader.ui.main.login.LoginFragment
 import com.smartx.rfidreader.ui.main.reader.ReaderSelectionFragment
 
 class ConfigAccessFragment : Fragment() {
@@ -33,6 +34,10 @@ class ConfigAccessFragment : Fragment() {
 
         binding.btnOpenConfig.setOnClickListener {
             (requireActivity() as MainActivity).navigateTo(ConfigFragment())
+        }
+
+        binding.btnGoLogin.setOnClickListener {
+            (requireActivity() as MainActivity).navigateTo(LoginFragment(), MainActivity.TAG_LOGIN)
         }
 
         binding.btnBackHome.setOnClickListener {

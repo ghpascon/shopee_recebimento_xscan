@@ -26,14 +26,18 @@ public final class FragmentConfigAccessBinding implements ViewBinding {
   public final MaterialButton btnChooseReader;
 
   @NonNull
+  public final MaterialButton btnGoLogin;
+
+  @NonNull
   public final MaterialButton btnOpenConfig;
 
   private FragmentConfigAccessBinding(@NonNull LinearLayout rootView,
       @NonNull MaterialButton btnBackHome, @NonNull MaterialButton btnChooseReader,
-      @NonNull MaterialButton btnOpenConfig) {
+      @NonNull MaterialButton btnGoLogin, @NonNull MaterialButton btnOpenConfig) {
     this.rootView = rootView;
     this.btnBackHome = btnBackHome;
     this.btnChooseReader = btnChooseReader;
+    this.btnGoLogin = btnGoLogin;
     this.btnOpenConfig = btnOpenConfig;
   }
 
@@ -76,6 +80,12 @@ public final class FragmentConfigAccessBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.btnGoLogin;
+      MaterialButton btnGoLogin = ViewBindings.findChildViewById(rootView, id);
+      if (btnGoLogin == null) {
+        break missingId;
+      }
+
       id = R.id.btnOpenConfig;
       MaterialButton btnOpenConfig = ViewBindings.findChildViewById(rootView, id);
       if (btnOpenConfig == null) {
@@ -83,7 +93,7 @@ public final class FragmentConfigAccessBinding implements ViewBinding {
       }
 
       return new FragmentConfigAccessBinding((LinearLayout) rootView, btnBackHome, btnChooseReader,
-          btnOpenConfig);
+          btnGoLogin, btnOpenConfig);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

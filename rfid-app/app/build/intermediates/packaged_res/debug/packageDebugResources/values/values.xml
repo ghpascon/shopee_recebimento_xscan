@@ -89,6 +89,7 @@
     <string name="btn_delete_all">Apagar tudo</string>
     <string name="btn_disconnect">Desconectar</string>
     <string name="btn_export_csv">Exportar CSV</string>
+    <string name="btn_go_login_screen">Ir para login</string>
     <string name="btn_log_close">Fechar</string>
     <string name="btn_open_reader_config">Configurar leitor/app</string>
     <string name="btn_reload_config">Recarregar</string>
@@ -134,7 +135,8 @@
     <string name="export_csv_success">CSV exportado: %1$s</string>
     <string name="footer_app_version">v: %1$s</string>
     <string name="footer_device_id">ID: %1$s</string>
-    <string name="footer_user_department">%1$s | %2$s</string>
+    <string name="footer_logout">Logout</string>
+    <string name="footer_user_logged">Logado: %1$s</string>
     <string name="footer_user_not_authenticated">Não autenticado</string>
     <string name="helper_buzzer">Emite um bipe ao detectar nova tag</string>
     <string name="helper_power">Faixa válida: 5 – 33 dBm</string>
@@ -145,7 +147,11 @@
     <string name="hint_prefix">Ex: E200 ou 3000</string>
     <string name="hint_webhook_url">URL do Webhook</string>
     <string name="hint_xtrack_url">xtrack_url</string>
+    <string name="home_btn_confirm">Confirmar</string>
+    <string name="home_confirm_todo">Confirmação será implementada no próximo passo</string>
     <string name="home_subtitle">Gerenciamento de leitores RFID</string>
+    <string name="home_tags_section_title">Tags lidas (EPC)</string>
+    <string name="home_total_lido_title">Total lido</string>
     <string name="inventory_name_hint">Ex: Inventário Loja 01</string>
     <string name="inventory_name_required">Informe o nome do inventário</string>
     <string name="inventory_name_title">Nome do inventário</string>
