@@ -15,6 +15,8 @@ import com.smartx.rfidreader.core.reader.RfidTag
 import com.smartx.rfidreader.core.registry.ReaderRegistry
 import com.smartx.rfidreader.core.settings.AppSettings
 import com.smartx.rfidreader.core.settings.AppSettingsRepository
+import com.smartx.rfidreader.core.xtrack.XTrackLoginResult
+import com.smartx.rfidreader.core.xtrack.xtrack_manager
 import com.smartx.rfidreader.readers.cfh301.CfH301Reader
 import com.smartx.rfidreader.readers.x714.X714Reader
 import com.smartx.rfidreader.readers.ih25.IH25Reader
@@ -31,6 +33,9 @@ data class MainUiState(
     val config: ReaderConfig = ReaderConfig(),
     val isSavingConfig: Boolean = false,
     val configSaveSuccess: Boolean? = null,
+    val isLoggingIn: Boolean = false,
+    val loginErrorMessage: String? = null,
+    val isAuthenticated: Boolean = false,
     val appSettings: AppSettings = AppSettings(),
     val errorMessage: String? = null
 )
@@ -81,6 +86,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val _navigateToReading = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val navigateToReading: SharedFlow<Unit> = _navigateToReading.asSharedFlow()
 
+    /** Evento de navegação para a home após login bem-sucedido */
+    private val _navigateToHome = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val navigateToHome: SharedFlow<Unit> = _navigateToHome.asSharedFlow()
+
     /** Resultado ao salvar inventário: true = sucesso, false = erro */
     private val _saveInventoryResult = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
     val saveInventoryResult: SharedFlow<Boolean> = _saveInventoryResult.asSharedFlow()
@@ -113,6 +122,11 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             settingsRepo.flow.collect { settings ->
                 _uiState.update { it.copy(appSettings = settings) }
+            }
+        }
+        viewModelScope.launch {
+            xtrack_manager.currentUser.collect { user ->
+                _uiState.update { it.copy(isAuthenticated = user != null) }
             }
         }
         // Publica estado do leitor no singleton global — visível por qualquer Activity
@@ -495,6 +509,49 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             _uiState.update { it.copy(appSettings = toSave) }
             onSaved?.invoke()
         }
+    }
+
+    // -------------------------------------------------------------------------
+    // Login XTrack
+    // -------------------------------------------------------------------------
+
+    fun loginXTrack(username: String, password: String) {
+        val xtrackUrl = _uiState.value.appSettings.xtrackUrl.trim()
+        if (xtrackUrl.isBlank()) {
+            _uiState.update { it.copy(loginErrorMessage = "Configure xtrack_url antes de entrar") }
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoggingIn = true, loginErrorMessage = null) }
+
+            when (val result = xtrack_manager.login(xtrackUrl, username, password)) {
+                is XTrackLoginResult.Success -> {
+                    _uiState.update {
+                        it.copy(
+                            isLoggingIn = false,
+                            isAuthenticated = true,
+                            loginErrorMessage = null
+                        )
+                    }
+                    _navigateToHome.emit(Unit)
+                }
+
+                is XTrackLoginResult.Error -> {
+                    _uiState.update {
+                        it.copy(
+                            isLoggingIn = false,
+                            isAuthenticated = false,
+                            loginErrorMessage = result.message
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun consumeLoginError() {
+        _uiState.update { it.copy(loginErrorMessage = null) }
     }
 
     // -------------------------------------------------------------------------

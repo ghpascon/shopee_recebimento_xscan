@@ -139,12 +139,14 @@ class ConfigFragment : Fragment() {
     private fun saveAppSettings() {
         val rssi = binding.sliderRssi.value.toInt()
         val buzzer = binding.switchBuzzer.isChecked
+        val xtrackUrl = binding.editXtrackUrl.text?.toString()?.trim().orEmpty()
         val current = viewModel.uiState.value.appSettings
         viewModel.saveAppSettings(
             current.copy(
                 buzzerEnabled = buzzer,
                 rssiFilter = rssi,
-                prefixes = currentPrefixes.toList()
+                prefixes = currentPrefixes.toList(),
+                xtrackUrl = xtrackUrl
             )
         )
         showSnackbar(getString(R.string.app_settings_saved))
@@ -188,6 +190,10 @@ class ConfigFragment : Fragment() {
         binding.sliderRssi.value = rssiValue
         binding.textRssiValue.text = "${rssiValue.toInt()} dBm"
         binding.switchBuzzer.isChecked = settings.buzzerEnabled
+        val currentXtrack = binding.editXtrackUrl.text?.toString().orEmpty()
+        if (currentXtrack != settings.xtrackUrl) {
+            binding.editXtrackUrl.setText(settings.xtrackUrl)
+        }
 
         if (currentPrefixes != settings.prefixes) {
             currentPrefixes.clear()

@@ -958,30 +958,30 @@
     <color name="material_personalized_color_text_primary_inverse_disable_only">#FFFFFF</color>
     <color name="material_personalized_color_text_secondary_and_tertiary_inverse">#FFFFFF</color>
     <color name="material_personalized_color_text_secondary_and_tertiary_inverse_disabled">#FFFFFF</color>
-    <color name="md_theme_background">#F8F9FF</color>
+    <color name="md_theme_background">#FFF8F6</color>
     <color name="md_theme_error">#BA1A1A</color>
     <color name="md_theme_errorContainer">#FFDAD6</color>
-    <color name="md_theme_onBackground">#191C20</color>
+    <color name="md_theme_onBackground">#291815</color>
     <color name="md_theme_onError">#FFFFFF</color>
     <color name="md_theme_onErrorContainer">#410002</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
-    <color name="md_theme_onPrimaryContainer">#001D36</color>
+    <color name="md_theme_onPrimaryContainer">#3A0A00</color>
     <color name="md_theme_onSecondary">#FFFFFF</color>
-    <color name="md_theme_onSecondaryContainer">#101C2B</color>
-    <color name="md_theme_onSurface">#191C20</color>
-    <color name="md_theme_onSurfaceVariant">#41484D</color>
+    <color name="md_theme_onSecondaryContainer">#3D0900</color>
+    <color name="md_theme_onSurface">#291815</color>
+    <color name="md_theme_onSurfaceVariant">#5C3F39</color>
     <color name="md_theme_onTertiary">#FFFFFF</color>
-    <color name="md_theme_onTertiaryContainer">#251431</color>
-    <color name="md_theme_outline">#71787E</color>
-    <color name="md_theme_outlineVariant">#C1C7CE</color>
-    <color name="md_theme_primary">#1B6EBF</color>
-    <color name="md_theme_primaryContainer">#D3E4FF</color>
-    <color name="md_theme_secondary">#535F70</color>
-    <color name="md_theme_secondaryContainer">#D7E3F7</color>
-    <color name="md_theme_surface">#F8F9FF</color>
-    <color name="md_theme_surfaceVariant">#DDE3EA</color>
-    <color name="md_theme_tertiary">#6B5778</color>
-    <color name="md_theme_tertiaryContainer">#F2DAFF</color>
+    <color name="md_theme_onTertiaryContainer">#351000</color>
+    <color name="md_theme_outline">#906F68</color>
+    <color name="md_theme_outlineVariant">#E2C1BA</color>
+    <color name="md_theme_primary">#EE4D2D</color>
+    <color name="md_theme_primaryContainer">#FFDAD3</color>
+    <color name="md_theme_secondary">#9A3E2B</color>
+    <color name="md_theme_secondaryContainer">#FFDCD4</color>
+    <color name="md_theme_surface">#FFF8F6</color>
+    <color name="md_theme_surfaceVariant">#F8DDD7</color>
+    <color name="md_theme_tertiary">#A85F00</color>
+    <color name="md_theme_tertiaryContainer">#FFDEB8</color>
     <color name="mtrl_btn_text_color_disabled">#61000000</color>
     <color name="mtrl_btn_transparent_bg_color">#00ffffff</color>
     <color name="mtrl_scrim_color">#52000000</color>
@@ -2074,7 +2074,9 @@
     <string description="The content description of bottom sheet drag handles [CHAR LIMIT=NONE]" name="bottomsheet_drag_handle_content_description">Drag handle</string>
     <string name="btn_add_prefix">Adicionar</string>
     <string name="btn_apply_config">Aplicar</string>
+    <string name="btn_back_home">Voltar para home</string>
     <string name="btn_cancel">Cancelar</string>
+    <string name="btn_choose_reader">Escolher leitor</string>
     <string name="btn_clear_prefixes">Limpar tudo</string>
     <string name="btn_clear_tags">Limpar</string>
     <string name="btn_connect">Conectar</string>
@@ -2082,6 +2084,7 @@
     <string name="btn_disconnect">Desconectar</string>
     <string name="btn_export_csv">Exportar CSV</string>
     <string name="btn_log_close">Fechar</string>
+    <string name="btn_open_reader_config">Configurar leitor/app</string>
     <string name="btn_reload_config">Recarregar</string>
     <string name="btn_save_app_settings">Salvar</string>
     <string name="btn_save_reading">Salvar Leitura</string>
@@ -2123,6 +2126,7 @@
     <string name="common_open_on_phone">Open on phone</string>
     <string name="common_signin_button_text">Sign in</string>
     <string name="common_signin_button_text_long">Sign in with Google</string>
+    <string name="config_access_title">Configuração</string>
     <string name="config_save_error">Erro ao aplicar configuração</string>
     <string name="config_saved">Configuração aplicada com sucesso!</string>
     <string name="confirm_delete">Apagar</string>
@@ -2169,6 +2173,7 @@
     <string name="error_invalid_rssi">Valor RSSI inválido</string>
     <string name="error_invalid_url">URL inválida. Use http:// ou https://</string>
     <string name="error_invalid_webhook_interval">Intervalo inválido. Use um valor maior que zero</string>
+    <string name="error_login_empty_fields">Informe usuário e senha</string>
     <string name="error_no_reader">Nenhum leitor selecionado</string>
     <string name="error_power_range">Potência deve ser entre 5 e 33 dBm</string>
     <string name="event_json_title">JSON do Evento</string>
@@ -2183,14 +2188,18 @@
     <string name="fab_transformation_sheet_behavior" translatable="false">com.google.android.material.transformation.FabTransformationSheetBehavior</string>
     <string name="footer_app_version">v: %1$s</string>
     <string name="footer_device_id">ID: %1$s</string>
+    <string name="footer_user_department">%1$s | %2$s</string>
+    <string name="footer_user_not_authenticated">Não autenticado</string>
     <string name="helper_buzzer">Emite um bipe ao detectar nova tag</string>
     <string name="helper_power">Faixa válida: 5 – 33 dBm</string>
     <string name="helper_prefix">Somente tags com EPC iniciando pelo prefixo serão listadas</string>
     <string name="helper_webhook_url">Ex: https://meuservidor.com/api/rfid</string>
+    <string name="helper_xtrack_url">URL do serviço XTrack para integração</string>
     <string name="hide_bottom_view_on_scroll_behavior" translatable="false">com.google.android.material.behavior.HideBottomViewOnScrollBehavior</string>
     <string name="hint_power">Potência (dBm)</string>
     <string name="hint_prefix">Ex: E200 ou 3000</string>
     <string name="hint_webhook_url">URL do Webhook</string>
+    <string name="hint_xtrack_url">xtrack_url</string>
     <string name="home_subtitle">Gerenciamento de leitores RFID</string>
     <string description="Content description for an icon that appears in the title area of a dialog" name="icon_content_description">Dialog Icon</string>
     <string name="inventory_name_hint">Ex: Inventário Loja 01</string>
@@ -2206,6 +2215,11 @@
     <string name="label_session">Sessão Gen2</string>
     <string name="label_webhook">Webhook</string>
     <string name="label_webhook_interval">Intervalo (segundos)</string>
+    <string name="login_btn_enter">Login</string>
+    <string name="login_hint_password">Senha</string>
+    <string name="login_hint_user">Usuário</string>
+    <string name="login_recebimento">recebimento</string>
+    <string name="login_title">Entrar</string>
     <string name="m3_exceed_max_badge_text_suffix" translatable="false"><ns2:g example="Some te" id="part of a long text">%1$s</ns2:g><ns2:g example="…" id="suffix">%2$s</ns2:g></string>
     <string name="m3_ref_typeface_brand_medium" translatable="false">sans-serif-medium</string>
     <string name="m3_ref_typeface_brand_regular" translatable="false">sans-serif</string>

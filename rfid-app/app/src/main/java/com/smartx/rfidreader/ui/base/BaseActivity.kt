@@ -13,6 +13,7 @@ import androidx.viewbinding.ViewBinding
 import com.smartx.rfidreader.R
 import com.smartx.rfidreader.core.reader.ActiveReaderState
 import com.smartx.rfidreader.core.reader.ReaderConnectionState
+import com.smartx.rfidreader.core.xtrack.xtrack_manager
 import com.smartx.rfidreader.databinding.ActivityBaseBinding
 import com.smartx.rfidreader.databinding.HeaderAppBinding
 import kotlinx.coroutines.launch
@@ -68,6 +69,7 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         _baseBinding.footerApp.footerDeviceId.text = getString(R.string.footer_device_id, deviceId)
         _baseBinding.footerApp.footerAppVersion.text =
             getString(R.string.footer_app_version, appVersion)
+        _baseBinding.footerApp.footerUserInfo.text = getString(R.string.footer_user_not_authenticated)
 
         // Observa o estado global do leitor — atualiza header em TODAS as telas automaticamente
         observeReaderState()
@@ -105,6 +107,19 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
                             _baseBinding.headerApp.headerConnectionStatus.text = statusText
                             _baseBinding.headerApp.headerStatusDot.setBackgroundResource(statusDot)
                         }
+                }
+                launch {
+                    xtrack_manager.currentUser.collect { user ->
+                        _baseBinding.footerApp.footerUserInfo.text = if (user == null) {
+                            getString(R.string.footer_user_not_authenticated)
+                        } else {
+                            getString(
+                                R.string.footer_user_department,
+                                user.name.ifBlank { user.login },
+                                user.departmentName.ifBlank { "-" }
+                            )
+                        }
+                    }
                 }
             }
         }

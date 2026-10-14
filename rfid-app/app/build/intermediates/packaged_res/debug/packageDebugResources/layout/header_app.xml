@@ -19,7 +19,7 @@
             android:id="@+id/headerLogo"
             android:layout_width="@dimen/logo_header_width"
             android:layout_height="@dimen/logo_header_height"
-            android:src="@drawable/smtx"
+            android:src="@drawable/shopee_logo"
             android:contentDescription="@string/app_name"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter" />

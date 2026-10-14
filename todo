@@ -1,0 +1,66 @@
+ok, agora a tela principal deve ser de login, com usuario e senha, para isso quero que crie uma classe primeiro chamada de xtrack_manager, onde vai ter todas as funções do xtrack, a primeira funcao vai ser a de login, para isso vamos fazer um post na xtrack_url com o segunite payload: <msg>
+<command>GetUser</command>
+<terminal>ERP</terminal>
+</msg> e ele vai retornar em lista tipo assim: <DocumentElement>
+    <data>
+        <ID>1</ID>
+        <ACTIVE>1</ACTIVE>
+        <LOGIN>ADMIN</LOGIN>
+        <NAME>ADMINISTRATOR</NAME>
+        <PASSWORD>30D799DA0074745DF45EDF52713E1378</PASSWORD>
+        <LANGUAGE>0</LANGUAGE>
+        <LDAP>0</LDAP>
+        <PHONE></PHONE>
+        <EMAIL></EMAIL>
+        <JOBTITLE>ADMINISTRATOR</JOBTITLE>
+        <IDENTIFIER></IDENTIFIER>
+        <ENFORCE_PASSWORD_POLICY>0</ENFORCE_PASSWORD_POLICY>
+        <ENFORCE_PASSWORD_EXPIRATION>0</ENFORCE_PASSWORD_EXPIRATION>
+        <ENFORCE_PASSWORD_CHANGE>0</ENFORCE_PASSWORD_CHANGE>
+        <ACCOUNT_EXPIRATION>2999-12-31T00:00:00-03:00</ACCOUNT_EXPIRATION>
+        <PASSWORD_EXPIRATION>2999-12-31T00:00:00-03:00</PASSWORD_EXPIRATION>
+        <LAST_LOGIN>2026-10-14T17:32:48-03:00</LAST_LOGIN>
+        <ROLE>1</ROLE>
+        <DEPARTMENT>0</DEPARTMENT>
+    </data>
+    <data>
+        <ID>2</ID>
+        <ACTIVE>1</ACTIVE>
+        <LOGIN>GABRIEL</LOGIN>
+        <NAME>Gabriel</NAME>
+        <PASSWORD>BA2697C6B210E3867274FC72E1C46BBF</PASSWORD>
+        <LANGUAGE>0</LANGUAGE>
+        <LDAP>0</LDAP>
+        <PHONE></PHONE>
+        <EMAIL></EMAIL>
+        <JOBTITLE></JOBTITLE>
+        <IDENTIFIER></IDENTIFIER>
+        <ENFORCE_PASSWORD_POLICY>0</ENFORCE_PASSWORD_POLICY>
+        <ENFORCE_PASSWORD_EXPIRATION>0</ENFORCE_PASSWORD_EXPIRATION>
+        <ENFORCE_PASSWORD_CHANGE>0</ENFORCE_PASSWORD_CHANGE>
+        <ACCOUNT_EXPIRATION>2999-12-31T00:00:00-03:00</ACCOUNT_EXPIRATION>
+        <PASSWORD_EXPIRATION>2999-12-31T00:00:00-03:00</PASSWORD_EXPIRATION>
+        <LAST_LOGIN>2000-01-01T00:00:00-02:00</LAST_LOGIN>
+        <ROLE>1</ROLE>
+        <DEPARTMENT>0</DEPARTMENT>
+    </data>
+</DocumentElement>, como validar, ache onde o usuario seja igual (use os dois em uppercase) e a senha use uppercase e use md5 com utf-8, caso ok passe para uma tela seguinte (ainda vamos fazer ela depois), e salve as infos do usuario na classe do xtrack como current user, no footer deve mostrar o name e o DEPARTMENT,
+
+o department retorna o id, para isso chame com o payload
+<msg>
+<command>GetDepartment</command>
+<terminal>ERP</terminal>
+</msg>
+que retorna <DocumentElement>
+    <data>
+        <ID>1</ID>
+        <NAME>Multilaser</NAME>
+    </data>
+    <data>
+        <ID>2</ID>
+        <NAME>Smartx</NAME>
+    </data>
+</DocumentElement>
+salve o department name e mostre ele ao lado do nome com um | para separar
+
+faça esses ajustes

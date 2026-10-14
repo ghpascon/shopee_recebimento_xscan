@@ -25,11 +25,15 @@ public final class FooterAppBinding implements ViewBinding {
   @NonNull
   public final TextView footerDeviceId;
 
+  @NonNull
+  public final TextView footerUserInfo;
+
   private FooterAppBinding(@NonNull LinearLayout rootView, @NonNull TextView footerAppVersion,
-      @NonNull TextView footerDeviceId) {
+      @NonNull TextView footerDeviceId, @NonNull TextView footerUserInfo) {
     this.rootView = rootView;
     this.footerAppVersion = footerAppVersion;
     this.footerDeviceId = footerDeviceId;
+    this.footerUserInfo = footerUserInfo;
   }
 
   @Override
@@ -71,7 +75,14 @@ public final class FooterAppBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FooterAppBinding((LinearLayout) rootView, footerAppVersion, footerDeviceId);
+      id = R.id.footerUserInfo;
+      TextView footerUserInfo = ViewBindings.findChildViewById(rootView, id);
+      if (footerUserInfo == null) {
+        break missingId;
+      }
+
+      return new FooterAppBinding((LinearLayout) rootView, footerAppVersion, footerDeviceId,
+          footerUserInfo);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

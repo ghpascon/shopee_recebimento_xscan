@@ -3,8 +3,10 @@ package com.smartx.rfidreader.ui.main
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
-import android.widget.Toast
 import android.view.KeyEvent
+import android.view.MotionEvent
+import android.view.ViewConfiguration
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
@@ -12,9 +14,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.smartx.rfidreader.R
-import com.smartx.rfidreader.databinding.ActivityMainBinding
 import com.smartx.rfidreader.core.reader.ReaderConnectionState
+import com.smartx.rfidreader.databinding.ActivityMainBinding
 import com.smartx.rfidreader.ui.base.BaseActivity
+import com.smartx.rfidreader.ui.main.access.ConfigAccessFragment
+import com.smartx.rfidreader.ui.main.login.LoginFragment
 import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -29,12 +33,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             KeyEvent.KEYCODE_BUTTON_R1,
             523   // XR2 handle trigger
         )
+
+        private const val HEADER_HOLD_MS = 5000L
         const val TAG_HOME = "home"
+        const val TAG_LOGIN = "login"
+        const val TAG_CONFIG_ACCESS = "config_access"
     }
 
     val viewModel: MainViewModel by viewModels()
 
     private var backPressedTime = 0L
+    private var headerDownAt = 0L
+    private var headerDownX = 0f
+    private var headerDownY = 0f
+    private var headerGestureCanceled = false
 
     override fun inflateBinding(inflater: LayoutInflater) = ActivityMainBinding.inflate(inflater)
 
@@ -43,10 +55,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         observeHeader()
 
         if (savedInstanceState == null) {
-            loadHome()
+            if (viewModel.uiState.value.isAuthenticated) {
+                loadHome()
+            } else {
+                loadLogin()
+            }
         }
 
         setupBackHandler()
+        setupHeaderAccessGesture()
         observeNavigation()
     }
 
@@ -78,6 +95,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, HomeFragment(), TAG_HOME)
             .commit()
+    }
+
+    private fun loadLogin() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, LoginFragment(), TAG_LOGIN)
+            .commit()
+    }
+
+    fun goHome() {
+        supportFragmentManager.popBackStackImmediate(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        loadHome()
     }
 
     /** Navega para um fragmento, adicionando ao back stack */
@@ -124,9 +152,59 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.navigateToReading.collect {
-                    // Volta para a tela inicial após conectar
+                    // Volta para a tela anterior após conectar
                     supportFragmentManager.popBackStack()
                 }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigateToHome.collect {
+                    goHome()
+                }
+            }
+        }
+    }
+
+    private fun setupHeaderAccessGesture() {
+        val touchSlop = ViewConfiguration.get(this).scaledTouchSlop
+        headerBinding.root.setOnTouchListener { _, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    headerDownAt = SystemClock.elapsedRealtime()
+                    headerDownX = event.rawX
+                    headerDownY = event.rawY
+                    headerGestureCanceled = false
+                    true
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    val movedX = kotlin.math.abs(event.rawX - headerDownX)
+                    val movedY = kotlin.math.abs(event.rawY - headerDownY)
+                    if (movedX > touchSlop || movedY > touchSlop) {
+                        headerGestureCanceled = true
+                    }
+                    true
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    val heldMs = SystemClock.elapsedRealtime() - headerDownAt
+                    if (!headerGestureCanceled && heldMs >= HEADER_HOLD_MS) {
+                        navigateTo(ConfigAccessFragment(), TAG_CONFIG_ACCESS)
+                    }
+                    headerDownAt = 0L
+                    headerGestureCanceled = false
+                    true
+                }
+
+                MotionEvent.ACTION_CANCEL -> {
+                    headerDownAt = 0L
+                    headerGestureCanceled = true
+                    true
+                }
+
+                else -> false
             }
         }
     }

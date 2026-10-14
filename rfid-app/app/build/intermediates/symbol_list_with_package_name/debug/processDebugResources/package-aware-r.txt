@@ -3185,6 +3185,7 @@ drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
+drawable shopee_logo
 drawable smtx
 drawable smtx_w
 drawable test_level_drawable
@@ -3280,7 +3281,6 @@ id auto
 id autoComplete
 id autoCompleteToEnd
 id autoCompleteToStart
-id badgePending
 id barrier
 id baseContent
 id baseline
@@ -3298,10 +3298,12 @@ id btnAddPrefix
 id btnAddSelected
 id btnAddTarget
 id btnApplyConfig
+id btnBackHome
 id btnBleCancel
 id btnBluetooth
 id btnCancel
 id btnCancelScan
+id btnChooseReader
 id btnClearPrefixes
 id btnClearScanned
 id btnClearTags
@@ -3315,6 +3317,8 @@ id btnDisconnect
 id btnExportCsv
 id btnLogCancel
 id btnLogClose
+id btnLogin
+id btnOpenConfig
 id btnReloadConfig
 id btnRemoveTarget
 id btnSaveAppSettings
@@ -3339,12 +3343,6 @@ id cardAddTarget
 id cardAppConfig
 id cardEvents
 id cardFinalResult
-id cardNavConfig
-id cardNavRadar
-id cardNavReader
-id cardNavReading
-id cardNavSync
-id cardNavWebhook
 id cardPower
 id cardReaderConfig
 id cardSync
@@ -3431,7 +3429,10 @@ id east
 id edge
 id editDialogWebhookUrl
 id editEpc
+id editPassword
 id editPrefix
+id editUsername
+id editXtrackUrl
 id edit_query
 id edit_text_id
 id elastic
@@ -3460,6 +3461,7 @@ id floating
 id footerApp
 id footerAppVersion
 id footerDeviceId
+id footerUserInfo
 id forever
 id fragmentContainer
 id fragment_container_view_tag
@@ -3497,6 +3499,7 @@ id ifRoom
 id ignore
 id ignoreRequest
 id image
+id imageLogo
 id imgSyncStatus
 id immediateStop
 id included
@@ -3518,8 +3521,11 @@ id labeled
 id layout
 id layoutDialogWebhookUrl
 id layoutEpcInput
+id layoutPassword
 id layoutPrefix
 id layoutSyncProgress
+id layoutUsername
+id layoutXtrackUrl
 id left
 id leftToRight
 id legacy
@@ -3647,6 +3653,7 @@ id pressed
 id progressBar
 id progressBleScan
 id progressConnect
+id progressLogin
 id progressSaving
 id progressSending
 id progressSignal
@@ -3773,10 +3780,9 @@ id textMessage
 id textNoTargets
 id textPendingCount
 id textPowerValue
-id textRadarHint
 id textReaderId
 id textReaderName
-id textReadingStatusHint
+id textRecebimento
 id textRssi
 id textRssiValue
 id textScanCount
@@ -3792,7 +3798,6 @@ id textStatusTime
 id textSubtitle
 id textSyncItemLabel
 id textSyncItemStatus
-id textSyncPending
 id textSyncProgressLabel
 id textTagCount
 id textTargetEpc
@@ -4000,7 +4005,9 @@ layout dialog_webhook_config
 layout dialog_zebra_transport
 layout footer_app
 layout fragment_config
+layout fragment_config_access
 layout fragment_home
+layout fragment_login
 layout fragment_radar
 layout fragment_reader_selection
 layout fragment_reading
@@ -4133,7 +4140,9 @@ string bottomsheet_drag_handle_clicked
 string bottomsheet_drag_handle_content_description
 string btn_add_prefix
 string btn_apply_config
+string btn_back_home
 string btn_cancel
+string btn_choose_reader
 string btn_clear_prefixes
 string btn_clear_tags
 string btn_connect
@@ -4141,6 +4150,7 @@ string btn_delete_all
 string btn_disconnect
 string btn_export_csv
 string btn_log_close
+string btn_open_reader_config
 string btn_reload_config
 string btn_save_app_settings
 string btn_save_reading
@@ -4182,6 +4192,7 @@ string common_google_play_services_wear_update_text
 string common_open_on_phone
 string common_signin_button_text
 string common_signin_button_text_long
+string config_access_title
 string config_save_error
 string config_saved
 string confirm_delete
@@ -4226,6 +4237,7 @@ string error_invalid_region
 string error_invalid_rssi
 string error_invalid_url
 string error_invalid_webhook_interval
+string error_login_empty_fields
 string error_no_reader
 string error_power_range
 string event_json_title
@@ -4240,14 +4252,18 @@ string fab_transformation_scrim_behavior
 string fab_transformation_sheet_behavior
 string footer_app_version
 string footer_device_id
+string footer_user_department
+string footer_user_not_authenticated
 string helper_buzzer
 string helper_power
 string helper_prefix
 string helper_webhook_url
+string helper_xtrack_url
 string hide_bottom_view_on_scroll_behavior
 string hint_power
 string hint_prefix
 string hint_webhook_url
+string hint_xtrack_url
 string home_subtitle
 string icon_content_description
 string inventory_name_hint
@@ -4263,6 +4279,11 @@ string label_sending_waiting
 string label_session
 string label_webhook
 string label_webhook_interval
+string login_btn_enter
+string login_hint_password
+string login_hint_user
+string login_recebimento
+string login_title
 string m3_exceed_max_badge_text_suffix
 string m3_ref_typeface_brand_medium
 string m3_ref_typeface_brand_regular

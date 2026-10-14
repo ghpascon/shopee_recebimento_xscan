@@ -14,6 +14,7 @@ data class AppSettings(
     val buzzerEnabled: Boolean = true,
     val rssiFilter: Int = -120,
     val prefixes: List<String> = emptyList(),
+    val xtrackUrl: String = "",
     val webhookUrl: String = "",
     val webhookIntervalSeconds: Int = 30,
     /** Último endereço MAC BLE selecionado (global) */
@@ -32,6 +33,7 @@ class AppSettingsRepository(context: Context) {
         private val KEY_RSSI = intPreferencesKey("rssi_filter")
         private val KEY_PREFIXES = stringPreferencesKey("prefixes")
         private val KEY_LAST_BLE = stringPreferencesKey("last_ble_address")
+        private val KEY_XTRACK_URL = stringPreferencesKey("xtrack_url")
         private val KEY_WEBHOOK = stringPreferencesKey("webhook_url")
         private val KEY_WEBHOOK_INTERVAL = intPreferencesKey("webhook_interval_seconds")
     }
@@ -48,6 +50,7 @@ class AppSettingsRepository(context: Context) {
                 rssiFilter = prefs[KEY_RSSI] ?: -120,
                 prefixes = if (prefixStr.isBlank()) emptyList()
                            else prefixStr.split("|").filter { it.isNotBlank() },
+                xtrackUrl = prefs[KEY_XTRACK_URL] ?: "",
                 webhookUrl = prefs[KEY_WEBHOOK] ?: "",
                 webhookIntervalSeconds = prefs[KEY_WEBHOOK_INTERVAL] ?: 30,
                 lastBleAddress = prefs[KEY_LAST_BLE] ?: ""
@@ -60,6 +63,7 @@ class AppSettingsRepository(context: Context) {
             prefs[KEY_BUZZER] = settings.buzzerEnabled
             prefs[KEY_RSSI] = settings.rssiFilter
             prefs[KEY_PREFIXES] = settings.prefixes.joinToString("|")
+            prefs[KEY_XTRACK_URL] = settings.xtrackUrl
             prefs[KEY_WEBHOOK] = settings.webhookUrl
             prefs[KEY_WEBHOOK_INTERVAL] = settings.webhookIntervalSeconds
             prefs[KEY_LAST_BLE] = settings.lastBleAddress

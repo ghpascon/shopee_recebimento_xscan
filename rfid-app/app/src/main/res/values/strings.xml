@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">X-SCAN</string>
+    <string name="login_recebimento">recebimento</string>
+    <string name="login_title">Entrar</string>
+    <string name="login_hint_user">Usuário</string>
+    <string name="login_hint_password">Senha</string>
+    <string name="login_btn_enter">Login</string>
+    <string name="error_login_empty_fields">Informe usuário e senha</string>
 
     <!-- Tela de seleção legada -->
     <string name="selection_title">Selecionar Leitor RFID</string>
@@ -38,6 +44,8 @@
     <string name="helper_buzzer">Emite um bipe ao detectar nova tag</string>
     <string name="label_prefix">Filtro de Prefixo EPC</string>
     <string name="helper_prefix">Somente tags com EPC iniciando pelo prefixo serão listadas</string>
+    <string name="hint_xtrack_url">xtrack_url</string>
+    <string name="helper_xtrack_url">URL do serviço XTrack para integração</string>
     <string name="hint_prefix">Ex: E200 ou 3000</string>
     <string name="btn_add_prefix">Adicionar</string>
     <string name="btn_clear_prefixes">Limpar tudo</string>
@@ -110,6 +118,10 @@
     <string name="nav_reader_desc">Conectar dispositivo</string>
     <string name="nav_config">Configuração</string>
     <string name="nav_config_desc">Ajustar parâmetros</string>
+    <string name="config_access_title">Configuração</string>
+    <string name="btn_choose_reader">Escolher leitor</string>
+    <string name="btn_open_reader_config">Configurar leitor/app</string>
+    <string name="btn_back_home">Voltar para home</string>
     <string name="nav_reading">Leitura</string>
     <string name="nav_reading_desc">Inventariar tags</string>
     <string name="nav_reading_no_reader">Conecte um leitor primeiro</string>
@@ -159,6 +171,8 @@
     <string name="badge_ble">BLE</string>
 
     <!-- Footer global -->
+    <string name="footer_user_not_authenticated">Não autenticado</string>
+    <string name="footer_user_department">%1$s | %2$s</string>
     <string name="footer_device_id">ID: %1$s</string>
     <string name="footer_app_version">v: %1$s</string>
 </resources>
