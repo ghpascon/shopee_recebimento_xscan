@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
@@ -33,7 +34,16 @@ public final class FragmentHomeBinding implements ViewBinding {
   public final MaterialCardView cardTotalLido;
 
   @NonNull
+  public final MaterialCardView cardUnregisteredTags;
+
+  @NonNull
   public final RecyclerView recyclerEpcs;
+
+  @NonNull
+  public final RecyclerView recyclerUnregisteredTags;
+
+  @NonNull
+  public final NestedScrollView scrollHomeContent;
 
   @NonNull
   public final View statusDot;
@@ -47,20 +57,29 @@ public final class FragmentHomeBinding implements ViewBinding {
   @NonNull
   public final TextView textTotalLido;
 
+  @NonNull
+  public final TextView textUnregisteredTitle;
+
   private FragmentHomeBinding(@NonNull ConstraintLayout rootView,
       @NonNull MaterialButton btnConfirm, @NonNull MaterialCardView cardTags,
-      @NonNull MaterialCardView cardTotalLido, @NonNull RecyclerView recyclerEpcs,
-      @NonNull View statusDot, @NonNull LinearLayout statusRow, @NonNull TextView textStatusHome,
-      @NonNull TextView textTotalLido) {
+      @NonNull MaterialCardView cardTotalLido, @NonNull MaterialCardView cardUnregisteredTags,
+      @NonNull RecyclerView recyclerEpcs, @NonNull RecyclerView recyclerUnregisteredTags,
+      @NonNull NestedScrollView scrollHomeContent, @NonNull View statusDot,
+      @NonNull LinearLayout statusRow, @NonNull TextView textStatusHome,
+      @NonNull TextView textTotalLido, @NonNull TextView textUnregisteredTitle) {
     this.rootView = rootView;
     this.btnConfirm = btnConfirm;
     this.cardTags = cardTags;
     this.cardTotalLido = cardTotalLido;
+    this.cardUnregisteredTags = cardUnregisteredTags;
     this.recyclerEpcs = recyclerEpcs;
+    this.recyclerUnregisteredTags = recyclerUnregisteredTags;
+    this.scrollHomeContent = scrollHomeContent;
     this.statusDot = statusDot;
     this.statusRow = statusRow;
     this.textStatusHome = textStatusHome;
     this.textTotalLido = textTotalLido;
+    this.textUnregisteredTitle = textUnregisteredTitle;
   }
 
   @Override
@@ -108,9 +127,27 @@ public final class FragmentHomeBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.cardUnregisteredTags;
+      MaterialCardView cardUnregisteredTags = ViewBindings.findChildViewById(rootView, id);
+      if (cardUnregisteredTags == null) {
+        break missingId;
+      }
+
       id = R.id.recyclerEpcs;
       RecyclerView recyclerEpcs = ViewBindings.findChildViewById(rootView, id);
       if (recyclerEpcs == null) {
+        break missingId;
+      }
+
+      id = R.id.recyclerUnregisteredTags;
+      RecyclerView recyclerUnregisteredTags = ViewBindings.findChildViewById(rootView, id);
+      if (recyclerUnregisteredTags == null) {
+        break missingId;
+      }
+
+      id = R.id.scrollHomeContent;
+      NestedScrollView scrollHomeContent = ViewBindings.findChildViewById(rootView, id);
+      if (scrollHomeContent == null) {
         break missingId;
       }
 
@@ -138,8 +175,16 @@ public final class FragmentHomeBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.textUnregisteredTitle;
+      TextView textUnregisteredTitle = ViewBindings.findChildViewById(rootView, id);
+      if (textUnregisteredTitle == null) {
+        break missingId;
+      }
+
       return new FragmentHomeBinding((ConstraintLayout) rootView, btnConfirm, cardTags,
-          cardTotalLido, recyclerEpcs, statusDot, statusRow, textStatusHome, textTotalLido);
+          cardTotalLido, cardUnregisteredTags, recyclerEpcs, recyclerUnregisteredTags,
+          scrollHomeContent, statusDot, statusRow, textStatusHome, textTotalLido,
+          textUnregisteredTitle);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

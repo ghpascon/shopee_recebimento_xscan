@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">X-SCAN</string>
+    <string name="app_name">RECEBIMENTO</string>
     <string name="login_recebimento">recebimento</string>
     <string name="login_title">Entrar</string>
     <string name="login_hint_user">Usuário</string>
@@ -33,10 +33,15 @@
     <string name="hint_power">Potência (dBm)</string>
     <string name="helper_power">Faixa válida: 5 – 33 dBm</string>
     <string name="label_session">Sessão Gen2</string>
+    <string name="label_location">Localização</string>
+    <string name="hint_location">Selecionar localização</string>
+    <string name="helper_location">Usada no recebimento desta operação</string>
     <string name="btn_apply_config">Aplicar</string>
     <string name="btn_reload_config">Recarregar</string>
+    <string name="btn_open_xtrack_config">Configurar XTrack (URL e localização)</string>
     <string name="config_saved">Configuração aplicada com sucesso!</string>
     <string name="config_save_error">Erro ao aplicar configuração</string>
+    <string name="error_load_locations">Falha ao carregar localizações: %1$s</string>
 
     <!-- Config do app -->
     <string name="label_rssi_filter">Filtro RSSI mínimo</string>
@@ -46,12 +51,29 @@
     <string name="helper_prefix">Somente tags com EPC iniciando pelo prefixo serão listadas</string>
     <string name="hint_xtrack_url">xtrack_url</string>
     <string name="helper_xtrack_url">URL do serviço XTrack para integração</string>
+    <string name="section_xtrack_config">Integração XTrack</string>
+    <string name="btn_reload_locations">Carregar localizações</string>
+    <string name="btn_save_xtrack">Salvar XTrack</string>
+    <string name="error_xtrack_url_required">Informe o xtrack_url para continuar</string>
+    <string name="xtrack_details_title">Detalhes técnicos</string>
+    <string name="xtrack_details_placeholder">Sem tentativas recentes.</string>
+    <string name="xtrack_details_loading">Carregando localizações de %1$s usando comando GetLocation/ERP...</string>
+    <string name="xtrack_details_success">Sucesso: %1$d localização(ões) carregada(s). Exemplo: %2$s</string>
+    <string name="xtrack_details_error">Falha: %1$s</string>
     <string name="hint_prefix">Ex: E200 ou 3000</string>
     <string name="btn_add_prefix">Adicionar</string>
     <string name="btn_clear_prefixes">Limpar tudo</string>
     <string name="btn_save_app_settings">Salvar</string>
     <string name="app_settings_saved">Configurações salvas</string>
     <string name="prefix_already_exists">Prefixo já adicionado</string>
+    <string name="login_prereq_message">Antes do login: %1$s</string>
+    <string name="login_prereq_reader_connected">conectar o leitor</string>
+    <string name="login_prereq_xtrack_url">definir xtrack_url</string>
+    <string name="login_prereq_location">selecionar localização</string>
+    <string name="xtrack_warning_prefix">Aviso XTrack: %1$s</string>
+    <string name="xtrack_warning_unknown">falha desconhecida</string>
+    <string name="xtrack_warning_checking">Verificando comunicação com XTrack...</string>
+    <string name="xtrack_warning_retry_hint">Toque para tentar novamente.</string>
 
     <!-- Aba de leitura -->
     <string name="btn_start_inventory">Iniciar Leitura</string>
@@ -115,9 +137,27 @@
     <!-- Home navigation -->
     <string name="home_subtitle">Gerenciamento de leitores RFID</string>
     <string name="home_total_lido_title">Total lido</string>
-    <string name="home_tags_section_title">Tags lidas (EPC)</string>
+    <string name="home_tags_section_title">Tags lidas (Descrição)</string>
     <string name="home_btn_confirm">Confirmar</string>
     <string name="home_confirm_todo">Confirmação será implementada no próximo passo</string>
+    <string name="home_unregistered_title">Tags não cadastradas</string>
+    <string name="home_unregistered_title_with_count">Tags não cadastradas (%1$d)</string>
+    <string name="tag_description_loading">Buscando descrição...</string>
+    <string name="tag_not_registered">Não cadastrado</string>
+    <string name="tag_epc_with_idcode">IDCODE: %1$s | EPC: %2$s</string>
+    <string name="tag_epc_only">EPC: %1$s</string>
+    <string name="move_result_icon_desc">Resultado do envio</string>
+    <string name="move_result_success_title">Envio concluído</string>
+    <string name="move_result_success_message">%1$d tag(s) recebida(s) em %2$s</string>
+    <string name="move_result_error_title">Falha de conexão</string>
+    <string name="move_result_error_message">Falha na conexão. Verifique a rede e tente novamente.\n\nDetalhe: %1$s</string>
+    <string name="move_result_sending">Enviando tags para o XTrack...</string>
+    <string name="move_result_retry">Tentar enviar novamente</string>
+    <string name="move_result_new_reading">Nova leitura</string>
+    <string name="move_location_error_connection">Falha na conexão com o XTrack</string>
+    <string name="move_location_error_location_missing">Localização não definida para envio</string>
+    <string name="move_location_error_no_registered_tags">Nenhuma tag cadastrada para enviar</string>
+    <string name="move_location_error_no_retry_context">Não há envio anterior para tentar novamente</string>
     <string name="nav_reader">Leitor</string>
     <string name="nav_reader_desc">Conectar dispositivo</string>
     <string name="nav_config">Configuração</string>
@@ -178,6 +218,7 @@
     <!-- Footer global -->
     <string name="footer_user_not_authenticated">Não autenticado</string>
     <string name="footer_user_logged">Logado: %1$s</string>
+    <string name="footer_user_logged_with_location">Logado: %1$s | Local: %2$s</string>
     <string name="footer_logout">Logout</string>
     <string name="footer_device_id">ID: %1$s</string>
     <string name="footer_app_version">v: %1$s</string>

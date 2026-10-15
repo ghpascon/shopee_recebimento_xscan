@@ -357,9 +357,9 @@ MERGED from [:honeywell_rfid_sdk:] /home/gabriel/.gradle/caches/8.10.2/transform
 	android:label
 		ADDED from /home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:32:9-41
 	android:roundIcon
-		ADDED from /home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:33:9-54
+		ADDED from /home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:33:9-50
 	android:icon
-		ADDED from /home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:31:9-43
+		ADDED from /home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:31:9-45
 	android:allowBackup
 		ADDED from /home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:30:9-35
 		REJECTED from [rfidapi3lib-2.0.5.275.aar] /home/gabriel/.gradle/caches/8.10.2/transforms/8379c2d9bc62ad73a5e038bb69cb768d/transformed/jetified-rfidapi3lib-2.0.5.275/AndroidManifest.xml:15:9-36

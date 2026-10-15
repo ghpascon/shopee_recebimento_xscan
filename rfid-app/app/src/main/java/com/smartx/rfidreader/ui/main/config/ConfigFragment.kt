@@ -55,6 +55,7 @@ class ConfigFragment : Fragment() {
         binding.sliderPower.addOnChangeListener { _, value, _ ->
             binding.textPowerValue.text = "${value.toInt()} dBm"
         }
+
         binding.btnApplyConfig.setOnClickListener {
             val config = buildReaderConfigFromInputs() ?: return@setOnClickListener
             viewModel.saveConfig(config)
@@ -76,7 +77,7 @@ class ConfigFragment : Fragment() {
 
     private fun setupAppSettingsSection() {
         // Slider RSSI
-        binding.sliderRssi.addOnChangeListener { _, value, fromUser ->
+        binding.sliderRssi.addOnChangeListener { _, value, _ ->
             binding.textRssiValue.text = "${value.toInt()} dBm"
         }
 
@@ -139,14 +140,12 @@ class ConfigFragment : Fragment() {
     private fun saveAppSettings() {
         val rssi = binding.sliderRssi.value.toInt()
         val buzzer = binding.switchBuzzer.isChecked
-        val xtrackUrl = binding.editXtrackUrl.text?.toString()?.trim().orEmpty()
         val current = viewModel.uiState.value.appSettings
         viewModel.saveAppSettings(
             current.copy(
                 buzzerEnabled = buzzer,
                 rssiFilter = rssi,
-                prefixes = currentPrefixes.toList(),
-                xtrackUrl = xtrackUrl
+                prefixes = currentPrefixes.toList()
             )
         )
         showSnackbar(getString(R.string.app_settings_saved))
@@ -190,10 +189,6 @@ class ConfigFragment : Fragment() {
         binding.sliderRssi.value = rssiValue
         binding.textRssiValue.text = "${rssiValue.toInt()} dBm"
         binding.switchBuzzer.isChecked = settings.buzzerEnabled
-        val currentXtrack = binding.editXtrackUrl.text?.toString().orEmpty()
-        if (currentXtrack != settings.xtrackUrl) {
-            binding.editXtrackUrl.setText(settings.xtrackUrl)
-        }
 
         if (currentPrefixes != settings.prefixes) {
             currentPrefixes.clear()

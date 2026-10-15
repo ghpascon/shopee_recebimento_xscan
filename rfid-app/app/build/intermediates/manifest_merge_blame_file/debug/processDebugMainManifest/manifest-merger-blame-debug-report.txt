@@ -1,8 +1,8 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
 3    package="com.smartx.rfidreader"
-4    android:versionCode="50"
-5    android:versionName="6.6.0" > <!-- Allow TSL SDK (minSdk 26) to be merged without raising project minSdk -->
+4    android:versionCode="51"
+5    android:versionName="6.7.0" > <!-- Allow TSL SDK (minSdk 26) to be merged without raising project minSdk -->
 6    <uses-sdk
 6-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:6:5-71
 7        android:minSdkVersion="29"
@@ -88,12 +88,12 @@
 47-->[androidx.core:core:1.13.1] /home/gabriel/.gradle/caches/8.10.2/transforms/ff71e4781ad131b06a6fa55b996f5869/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
 48        android:debuggable="true"
 49        android:extractNativeLibs="false"
-50        android:icon="@mipmap/ic_launcher"
-50-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:31:9-43
+50        android:icon="@drawable/shopee_logo"
+50-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:31:9-45
 51        android:label="@string/app_name"
 51-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:32:9-41
-52        android:roundIcon="@mipmap/ic_launcher_round"
-52-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:33:9-54
+52        android:roundIcon="@drawable/shopee_logo"
+52-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:33:9-50
 53        android:supportsRtl="true"
 53-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:34:9-35
 54        android:theme="@style/Theme.RfidReader"

@@ -12,8 +12,8 @@ android {
         applicationId "com.smartx.rfidreader"
         minSdk 29
         targetSdk 34
-        versionCode 51
-        versionName "6.7.0"
+        versionCode 52
+        versionName "7.0.0"
     }
 
     buildTypes {
@@ -104,6 +104,9 @@ dependencies {
     // --- SDK XR2 (Ubx / URFIDLibrary) ---
     implementation(name: 'URFIDLibrary-v2.4.0307', ext: 'aar')
     implementation files('libs/platform_sdk_v3.1.221124.jar')
+
+    // --- Unit tests ---
+    testImplementation 'junit:junit:4.13.2'
 }
 
 // -----------------------------------------------------------------------------

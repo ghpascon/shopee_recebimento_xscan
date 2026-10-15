@@ -46,13 +46,20 @@ public final class FragmentLoginBinding implements ViewBinding {
   public final ProgressBar progressLogin;
 
   @NonNull
+  public final TextView textLoginBlockReason;
+
+  @NonNull
   public final TextView textRecebimento;
+
+  @NonNull
+  public final TextView textXtrackWarning;
 
   private FragmentLoginBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnLogin,
       @NonNull TextInputEditText editPassword, @NonNull TextInputEditText editUsername,
       @NonNull ImageView imageLogo, @NonNull TextInputLayout layoutPassword,
       @NonNull TextInputLayout layoutUsername, @NonNull ProgressBar progressLogin,
-      @NonNull TextView textRecebimento) {
+      @NonNull TextView textLoginBlockReason, @NonNull TextView textRecebimento,
+      @NonNull TextView textXtrackWarning) {
     this.rootView = rootView;
     this.btnLogin = btnLogin;
     this.editPassword = editPassword;
@@ -61,7 +68,9 @@ public final class FragmentLoginBinding implements ViewBinding {
     this.layoutPassword = layoutPassword;
     this.layoutUsername = layoutUsername;
     this.progressLogin = progressLogin;
+    this.textLoginBlockReason = textLoginBlockReason;
     this.textRecebimento = textRecebimento;
+    this.textXtrackWarning = textXtrackWarning;
   }
 
   @Override
@@ -133,14 +142,27 @@ public final class FragmentLoginBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.textLoginBlockReason;
+      TextView textLoginBlockReason = ViewBindings.findChildViewById(rootView, id);
+      if (textLoginBlockReason == null) {
+        break missingId;
+      }
+
       id = R.id.textRecebimento;
       TextView textRecebimento = ViewBindings.findChildViewById(rootView, id);
       if (textRecebimento == null) {
         break missingId;
       }
 
+      id = R.id.textXtrackWarning;
+      TextView textXtrackWarning = ViewBindings.findChildViewById(rootView, id);
+      if (textXtrackWarning == null) {
+        break missingId;
+      }
+
       return new FragmentLoginBinding((ScrollView) rootView, btnLogin, editPassword, editUsername,
-          imageLogo, layoutPassword, layoutUsername, progressLogin, textRecebimento);
+          imageLogo, layoutPassword, layoutUsername, progressLogin, textLoginBlockReason,
+          textRecebimento, textXtrackWarning);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

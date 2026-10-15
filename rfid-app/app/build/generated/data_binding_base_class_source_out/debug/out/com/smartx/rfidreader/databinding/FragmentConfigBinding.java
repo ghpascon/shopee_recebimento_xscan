@@ -56,16 +56,10 @@ public final class FragmentConfigBinding implements ViewBinding {
   public final TextInputEditText editPrefix;
 
   @NonNull
-  public final TextInputEditText editXtrackUrl;
-
-  @NonNull
   public final TextView labelSession;
 
   @NonNull
   public final TextInputLayout layoutPrefix;
-
-  @NonNull
-  public final TextInputLayout layoutXtrackUrl;
 
   @NonNull
   public final ProgressBar progressSaving;
@@ -93,8 +87,7 @@ public final class FragmentConfigBinding implements ViewBinding {
       @NonNull MaterialButton btnReloadConfig, @NonNull MaterialButton btnSaveAppSettings,
       @NonNull MaterialCardView cardAppConfig, @NonNull MaterialCardView cardReaderConfig,
       @NonNull ChipGroup chipGroupPrefixes, @NonNull TextInputEditText editPrefix,
-      @NonNull TextInputEditText editXtrackUrl, @NonNull TextView labelSession,
-      @NonNull TextInputLayout layoutPrefix, @NonNull TextInputLayout layoutXtrackUrl,
+      @NonNull TextView labelSession, @NonNull TextInputLayout layoutPrefix,
       @NonNull ProgressBar progressSaving, @NonNull Slider sliderPower, @NonNull Slider sliderRssi,
       @NonNull Spinner spinnerSession, @NonNull SwitchMaterial switchBuzzer,
       @NonNull TextView textPowerValue, @NonNull TextView textRssiValue) {
@@ -108,10 +101,8 @@ public final class FragmentConfigBinding implements ViewBinding {
     this.cardReaderConfig = cardReaderConfig;
     this.chipGroupPrefixes = chipGroupPrefixes;
     this.editPrefix = editPrefix;
-    this.editXtrackUrl = editXtrackUrl;
     this.labelSession = labelSession;
     this.layoutPrefix = layoutPrefix;
-    this.layoutXtrackUrl = layoutXtrackUrl;
     this.progressSaving = progressSaving;
     this.sliderPower = sliderPower;
     this.sliderRssi = sliderRssi;
@@ -202,12 +193,6 @@ public final class FragmentConfigBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.editXtrackUrl;
-      TextInputEditText editXtrackUrl = ViewBindings.findChildViewById(rootView, id);
-      if (editXtrackUrl == null) {
-        break missingId;
-      }
-
       id = R.id.labelSession;
       TextView labelSession = ViewBindings.findChildViewById(rootView, id);
       if (labelSession == null) {
@@ -217,12 +202,6 @@ public final class FragmentConfigBinding implements ViewBinding {
       id = R.id.layoutPrefix;
       TextInputLayout layoutPrefix = ViewBindings.findChildViewById(rootView, id);
       if (layoutPrefix == null) {
-        break missingId;
-      }
-
-      id = R.id.layoutXtrackUrl;
-      TextInputLayout layoutXtrackUrl = ViewBindings.findChildViewById(rootView, id);
-      if (layoutXtrackUrl == null) {
         break missingId;
       }
 
@@ -270,9 +249,8 @@ public final class FragmentConfigBinding implements ViewBinding {
 
       return new FragmentConfigBinding((ScrollView) rootView, btnAddPrefix, btnApplyConfig,
           btnClearPrefixes, btnReloadConfig, btnSaveAppSettings, cardAppConfig, cardReaderConfig,
-          chipGroupPrefixes, editPrefix, editXtrackUrl, labelSession, layoutPrefix, layoutXtrackUrl,
-          progressSaving, sliderPower, sliderRssi, spinnerSession, switchBuzzer, textPowerValue,
-          textRssiValue);
+          chipGroupPrefixes, editPrefix, labelSession, layoutPrefix, progressSaving, sliderPower,
+          sliderRssi, spinnerSession, switchBuzzer, textPowerValue, textRssiValue);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

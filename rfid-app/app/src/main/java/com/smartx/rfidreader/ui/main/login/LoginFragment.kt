@@ -22,6 +22,7 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: MainViewModel by activityViewModels()
+    private var lastCheckedXtrackUrl: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +44,10 @@ class LoginFragment : Fragment() {
             submitLogin()
         }
 
+        binding.textXtrackWarning.setOnClickListener {
+            viewModel.checkXtrackCommunication(force = true)
+        }
+
         binding.editPassword.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 submitLogin()
@@ -54,6 +59,12 @@ class LoginFragment : Fragment() {
     }
 
     private fun submitLogin() {
+        val loginBlockReason = viewModel.getLoginBlockReason()
+        if (loginBlockReason != null) {
+            Snackbar.make(binding.root, loginBlockReason, Snackbar.LENGTH_LONG).show()
+            return
+        }
+
         val username = binding.editUsername.text?.toString()?.trim().orEmpty()
         val password = binding.editPassword.text?.toString().orEmpty()
 
@@ -69,8 +80,33 @@ class LoginFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
+                    val currentUrl = state.appSettings.xtrackUrl.trim()
+                    if (currentUrl != lastCheckedXtrackUrl) {
+                        lastCheckedXtrackUrl = currentUrl
+                        viewModel.checkXtrackCommunication(force = true)
+                    }
+
+                    val loginBlockReason = viewModel.getLoginBlockReason()
                     binding.progressLogin.visibility = if (state.isLoggingIn) View.VISIBLE else View.GONE
-                    binding.btnLogin.isEnabled = !state.isLoggingIn
+                    binding.btnLogin.isEnabled = !state.isLoggingIn && loginBlockReason == null
+                    binding.textLoginBlockReason.visibility = if (loginBlockReason == null) View.GONE else View.VISIBLE
+                    binding.textLoginBlockReason.text = loginBlockReason.orEmpty()
+
+                    when {
+                        state.isCheckingXtrackCommunication -> {
+                            binding.textXtrackWarning.visibility = View.VISIBLE
+                            binding.textXtrackWarning.text = getString(R.string.xtrack_warning_checking)
+                        }
+                        !state.xtrackCommunicationWarning.isNullOrBlank() -> {
+                            binding.textXtrackWarning.visibility = View.VISIBLE
+                            binding.textXtrackWarning.text =
+                                state.xtrackCommunicationWarning + "\n" + getString(R.string.xtrack_warning_retry_hint)
+                        }
+                        else -> {
+                            binding.textXtrackWarning.visibility = View.GONE
+                            binding.textXtrackWarning.text = ""
+                        }
+                    }
 
                     state.loginErrorMessage?.let { error ->
                         Snackbar.make(binding.root, error, Snackbar.LENGTH_LONG).show()

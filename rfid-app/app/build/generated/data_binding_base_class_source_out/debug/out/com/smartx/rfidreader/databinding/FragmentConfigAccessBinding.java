@@ -31,14 +31,19 @@ public final class FragmentConfigAccessBinding implements ViewBinding {
   @NonNull
   public final MaterialButton btnOpenConfig;
 
+  @NonNull
+  public final MaterialButton btnOpenXtrackConfig;
+
   private FragmentConfigAccessBinding(@NonNull LinearLayout rootView,
       @NonNull MaterialButton btnBackHome, @NonNull MaterialButton btnChooseReader,
-      @NonNull MaterialButton btnGoLogin, @NonNull MaterialButton btnOpenConfig) {
+      @NonNull MaterialButton btnGoLogin, @NonNull MaterialButton btnOpenConfig,
+      @NonNull MaterialButton btnOpenXtrackConfig) {
     this.rootView = rootView;
     this.btnBackHome = btnBackHome;
     this.btnChooseReader = btnChooseReader;
     this.btnGoLogin = btnGoLogin;
     this.btnOpenConfig = btnOpenConfig;
+    this.btnOpenXtrackConfig = btnOpenXtrackConfig;
   }
 
   @Override
@@ -92,8 +97,14 @@ public final class FragmentConfigAccessBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.btnOpenXtrackConfig;
+      MaterialButton btnOpenXtrackConfig = ViewBindings.findChildViewById(rootView, id);
+      if (btnOpenXtrackConfig == null) {
+        break missingId;
+      }
+
       return new FragmentConfigAccessBinding((LinearLayout) rootView, btnBackHome, btnChooseReader,
-          btnGoLogin, btnOpenConfig);
+          btnGoLogin, btnOpenConfig, btnOpenXtrackConfig);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -5,6 +5,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.smartx.rfidreader.R
 import com.smartx.rfidreader.RfidApplication
 import com.smartx.rfidreader.core.location.GpsHelper
 import com.smartx.rfidreader.core.reader.IRfidReader
@@ -22,6 +23,8 @@ import com.smartx.rfidreader.readers.x714.X714Reader
 import com.smartx.rfidreader.readers.ih25.IH25Reader
 import com.smartx.rfidreader.readers.tsl1128.Tsl1128Reader
 import com.smartx.rfidreader.readers.zebra.ZebraReader
+import java.io.IOException
+import java.util.Locale
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -35,10 +38,29 @@ data class MainUiState(
     val configSaveSuccess: Boolean? = null,
     val isLoggingIn: Boolean = false,
     val loginErrorMessage: String? = null,
+    val isCheckingXtrackCommunication: Boolean = false,
+    val xtrackCommunicationWarning: String? = null,
     val isAuthenticated: Boolean = false,
     val appSettings: AppSettings = AppSettings(),
     val errorMessage: String? = null
 )
+
+data class MoveLocationRequest(
+    val xtrackUrl: String,
+    val locationName: String,
+    val objectIdCodes: List<String>
+)
+
+sealed interface MoveLocationUiResult {
+    data class Success(
+        val sentCount: Int,
+        val locationName: String
+    ) : MoveLocationUiResult
+    data class Error(
+        val message: String,
+        val canRetry: Boolean = true
+    ) : MoveLocationUiResult
+}
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
 
@@ -94,11 +116,23 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val _saveInventoryResult = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
     val saveInventoryResult: SharedFlow<Boolean> = _saveInventoryResult.asSharedFlow()
 
+    /** Resultado da operação MoveLocation do botão Confirmar */
+    private val _moveLocationResult = MutableSharedFlow<MoveLocationUiResult>(extraBufferCapacity = 1)
+    val moveLocationResult: SharedFlow<MoveLocationUiResult> = _moveLocationResult.asSharedFlow()
+
     /** Log de conexão — lista acumulada de linhas exibida no ConnectionLogDialogFragment */
     private val _connectionLog = MutableStateFlow<List<String>>(emptyList())
     val connectionLog: StateFlow<List<String>> = _connectionLog.asStateFlow()
     private var connectionStartMs: Long = 0L
     private var connectJob: Job? = null
+    private var isResolvingTagDescriptions = false
+    private var hasDescriptionLookupConnectionFailure = false
+    private var lastDescriptionResolveAtMs = 0L
+    private var lastMoveLocationRequest: MoveLocationRequest? = null
+
+    companion object {
+        private const val DESCRIPTION_RESOLVE_INTERVAL_MS = 3_000L
+    }
 
     private fun emitLog(msg: String) {
         val elapsed = (System.currentTimeMillis() - connectionStartMs) / 1000.0
@@ -117,6 +151,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     var reader: IRfidReader? = null
         private set
+
+    private var lastCheckedXtrackUrl: String = ""
 
     init {
         viewModelScope.launch {
@@ -249,12 +285,25 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                     is IH25Reader -> rfidReader.targetMacAddress ?: settings.lastBleAddress
                     else -> settings.lastBleAddress
                 } ?: ""
-                settingsRepo.save(settings.copy(lastReaderId = rfidReader.readerId, lastBleAddress = macToSave))
+                val updatedSettings = settings.copy(
+                    lastReaderId = rfidReader.readerId,
+                    lastBleAddress = macToSave
+                )
+                settingsRepo.save(updatedSettings)
+                _uiState.update { it.copy(appSettings = updatedSettings) }
                 observeReader(rfidReader)
-                // Lê config atual e aplica imediatamente para garantir modo correto (ex: EPC+TID)
-                val config = rfidReader.readConfig()
-                rfidReader.applyConfig(config)
-                _uiState.update { it.copy(config = config) }
+                // Lê config do hardware e aplica valores persistidos do usuário.
+                val hardwareConfig = rfidReader.readConfig()
+                val persistedConfig = hardwareConfig.copy(
+                    txPower = updatedSettings.readerTxPower,
+                    session = updatedSettings.readerSession.coerceIn(0, 3)
+                )
+                val persistedApplied = rfidReader.applyConfig(persistedConfig)
+                val finalConfig = if (persistedApplied) persistedConfig else hardwareConfig
+                if (!persistedApplied) {
+                    emitLog("Falha ao aplicar config persistida; mantendo config atual do leitor.")
+                }
+                _uiState.update { it.copy(config = finalConfig) }
                 emitLog("✓ Pronto! (%.1fs)".format(elapsed / 1000.0))
                 _navigateToReading.emit(Unit)
             } else {
@@ -275,6 +324,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             reader?.disconnect()
             reader = null
             _tags.value = emptyList()
+            isResolvingTagDescriptions = false
+            hasDescriptionLookupConnectionFailure = false
+            lastDescriptionResolveAtMs = 0L
             _uiState.update {
                 it.copy(connectionState = ReaderConnectionState.DISCONNECTED, isInventorying = false)
             }
@@ -349,8 +401,97 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                     _tagsDirty = false
                     _tags.value = _tagMap.values.toList()
                 }
+                maybeResolveTagDescriptions()
             }
         }
+    }
+
+    private fun maybeResolveTagDescriptions() {
+        if (isResolvingTagDescriptions) return
+        if (hasDescriptionLookupConnectionFailure) return
+
+        val now = System.currentTimeMillis()
+        if (now - lastDescriptionResolveAtMs < DESCRIPTION_RESOLVE_INTERVAL_MS) return
+
+        val xtrackUrl = _uiState.value.appSettings.xtrackUrl.trim()
+        if (xtrackUrl.isBlank()) return
+
+        val pendingEpcs = _tagMap.values.asSequence()
+            .filter { it.description.isBlank() }
+            .map { it.epc.trim().uppercase(Locale.ROOT) }
+            .filter { it.isNotBlank() }
+            .distinct()
+            .toList()
+
+        if (pendingEpcs.isEmpty()) return
+
+        isResolvingTagDescriptions = true
+        lastDescriptionResolveAtMs = now
+
+        viewModelScope.launch {
+            val app = getApplication<Application>()
+            val result = xtrack_manager.fetchObjectInfos(xtrackUrl, pendingEpcs)
+            result.onSuccess { objectInfoMap ->
+                val notRegistered = getApplication<Application>().getString(R.string.tag_not_registered)
+                var changed = false
+
+                for (normalizedEpc in pendingEpcs) {
+                    val entry = _tagMap.entries.firstOrNull {
+                        it.key.trim().uppercase(Locale.ROOT) == normalizedEpc
+                    } ?: continue
+
+                    val currentTag = entry.value
+                    val info = objectInfoMap[normalizedEpc]
+                    val nextDescription = info?.description ?: notRegistered
+                    val nextObjectIdCode = info?.objectIdCode.orEmpty()
+                    val nextErrorFlag = info == null
+
+                    if (currentTag.description != nextDescription ||
+                        currentTag.objectIdCode != nextObjectIdCode ||
+                        currentTag.descriptionLookupError != nextErrorFlag
+                    ) {
+                        _tagMap[entry.key] = currentTag.copy(
+                            description = nextDescription,
+                            objectIdCode = nextObjectIdCode,
+                            descriptionLookupError = nextErrorFlag
+                        )
+                        changed = true
+                    }
+                }
+
+                if (changed) {
+                    _tagsDirty = true
+                }
+            }.onFailure { err ->
+                Log.w(TAG, "Falha ao resolver descrições de tags: ${err.message}")
+                if (err.isNetworkOrHttpFailure()) {
+                    hasDescriptionLookupConnectionFailure = true
+                    _moveLocationResult.tryEmit(
+                        MoveLocationUiResult.Error(
+                            message = app.getString(R.string.move_location_error_connection),
+                            canRetry = false
+                        )
+                    )
+                }
+            }
+
+            isResolvingTagDescriptions = false
+        }
+    }
+
+    private fun Throwable.isNetworkOrHttpFailure(): Boolean {
+        val hasHttpStatus = Regex("""\bHTTP\s+\d{3}\b""")
+            .containsMatchIn(message.orEmpty())
+        var cause: Throwable? = this
+        var hasNetworkCause = false
+        while (cause != null) {
+            if (cause is IOException) {
+                hasNetworkCause = true
+                break
+            }
+            cause = cause.cause
+        }
+        return hasHttpStatus || hasNetworkCause
     }
 
     fun clearError() {
@@ -376,6 +517,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _tagMap.clear()
         _tagsDirty = false
         _tags.value = emptyList()
+        isResolvingTagDescriptions = false
+        hasDescriptionLookupConnectionFailure = false
+        lastDescriptionResolveAtMs = 0L
     }
 
     fun stopInventory() {
@@ -387,14 +531,111 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun stopInventoryAndClear() {
-        val r = reader ?: return
-        if (r.isInventorying()) {
+        val r = reader
+        if (r?.isInventorying() == true) {
             r.stopInventory()
             _uiState.update { it.copy(isInventorying = false) }
         }
         _tagMap.clear()
         _tagsDirty = false
         _tags.value = emptyList()
+        isResolvingTagDescriptions = false
+        hasDescriptionLookupConnectionFailure = false
+        lastDescriptionResolveAtMs = 0L
+    }
+
+    fun confirmMoveLocation() {
+        val app = getApplication<Application>()
+        val settings = _uiState.value.appSettings
+        val xtrackUrl = settings.xtrackUrl.trim()
+        val locationName = settings.selectedLocationName.trim().ifBlank { settings.selectedLocationId.trim() }
+
+        if (xtrackUrl.isBlank()) {
+            _moveLocationResult.tryEmit(
+                MoveLocationUiResult.Error(
+                    message = app.getString(R.string.error_xtrack_url_required),
+                    canRetry = false
+                )
+            )
+            return
+        }
+
+        if (locationName.isBlank()) {
+            _moveLocationResult.tryEmit(
+                MoveLocationUiResult.Error(
+                    message = app.getString(R.string.move_location_error_location_missing),
+                    canRetry = false
+                )
+            )
+            return
+        }
+
+        val objectIds = _tagMap.values
+            .filterNot { it.descriptionLookupError }
+            .map { it.objectIdCode.trim() }
+            .filter { it.isNotBlank() }
+            .distinct()
+
+        if (objectIds.isEmpty()) {
+            _moveLocationResult.tryEmit(
+                MoveLocationUiResult.Error(
+                    message = app.getString(R.string.move_location_error_no_registered_tags),
+                    canRetry = false
+                )
+            )
+            return
+        }
+
+        val request = MoveLocationRequest(
+            xtrackUrl = xtrackUrl,
+            locationName = locationName,
+            objectIdCodes = objectIds
+        )
+        lastMoveLocationRequest = request
+        executeMoveLocation(request)
+    }
+
+    fun retryLastMoveLocation() {
+        val request = lastMoveLocationRequest
+        if (request == null) {
+            val app = getApplication<Application>()
+            _moveLocationResult.tryEmit(
+                MoveLocationUiResult.Error(
+                    message = app.getString(R.string.move_location_error_no_retry_context),
+                    canRetry = false
+                )
+            )
+            return
+        }
+        executeMoveLocation(request)
+    }
+
+    private fun executeMoveLocation(request: MoveLocationRequest) {
+        viewModelScope.launch {
+            val app = getApplication<Application>()
+            val result = xtrack_manager.moveLocation(
+                xtrackUrl = request.xtrackUrl,
+                objectIdCodes = request.objectIdCodes,
+                locationName = request.locationName
+            )
+
+            result.onSuccess { sentCount ->
+                _moveLocationResult.emit(
+                    MoveLocationUiResult.Success(
+                        sentCount = sentCount,
+                        locationName = request.locationName
+                    )
+                )
+            }.onFailure { err ->
+                Log.e(TAG, "Falha ao enviar MoveLocation", err)
+                _moveLocationResult.emit(
+                    MoveLocationUiResult.Error(
+                        message = app.getString(R.string.move_location_error_connection),
+                        canRetry = true
+                    )
+                )
+            }
+        }
     }
 
     fun onTriggerPressed() {
@@ -426,12 +667,27 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             _uiState.update { it.copy(isSavingConfig = true, configSaveSuccess = null) }
             val ok = r.applyConfig(config)
-            _uiState.update {
-                it.copy(
-                    isSavingConfig = false,
-                    configSaveSuccess = ok,
-                    config = if (ok) config else it.config
+            if (ok) {
+                val updatedSettings = _uiState.value.appSettings.copy(
+                    readerTxPower = config.txPower,
+                    readerSession = config.session.coerceIn(0, 3)
                 )
+                settingsRepo.save(updatedSettings)
+                _uiState.update {
+                    it.copy(
+                        isSavingConfig = false,
+                        configSaveSuccess = true,
+                        config = config,
+                        appSettings = updatedSettings
+                    )
+                }
+            } else {
+                _uiState.update {
+                    it.copy(
+                        isSavingConfig = false,
+                        configSaveSuccess = false
+                    )
+                }
             }
         }
     }
@@ -515,12 +771,81 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     // Login XTrack
     // -------------------------------------------------------------------------
 
-    fun loginXTrack(username: String, password: String) {
-        val xtrackUrl = _uiState.value.appSettings.xtrackUrl.trim()
-        if (xtrackUrl.isBlank()) {
-            _uiState.update { it.copy(loginErrorMessage = "Configure xtrack_url antes de entrar") }
+    fun checkXtrackCommunication(force: Boolean = false) {
+        val app = getApplication<Application>()
+        val url = _uiState.value.appSettings.xtrackUrl.trim()
+
+        if (url.isBlank()) {
+            _uiState.update {
+                it.copy(
+                    isCheckingXtrackCommunication = false,
+                    xtrackCommunicationWarning = app.getString(R.string.error_xtrack_url_required)
+                )
+            }
             return
         }
+
+        if (!force && url == lastCheckedXtrackUrl) return
+        if (_uiState.value.isCheckingXtrackCommunication) return
+
+        lastCheckedXtrackUrl = url
+
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    isCheckingXtrackCommunication = true,
+                    xtrackCommunicationWarning = null
+                )
+            }
+
+            val result = xtrack_manager.checkCommunication(url)
+            result.onSuccess {
+                _uiState.update {
+                    it.copy(
+                        isCheckingXtrackCommunication = false,
+                        xtrackCommunicationWarning = null
+                    )
+                }
+            }.onFailure { err ->
+                val msg = err.message ?: app.getString(R.string.xtrack_warning_unknown)
+                _uiState.update {
+                    it.copy(
+                        isCheckingXtrackCommunication = false,
+                        xtrackCommunicationWarning = app.getString(R.string.xtrack_warning_prefix, msg)
+                    )
+                }
+            }
+        }
+    }
+
+    fun getLoginBlockReason(): String? {
+        val app = getApplication<Application>()
+        val missing = mutableListOf<String>()
+        val state = _uiState.value
+        val settings = state.appSettings
+
+        if (state.connectionState != ReaderConnectionState.CONNECTED) {
+            missing += app.getString(R.string.login_prereq_reader_connected)
+        }
+        if (settings.xtrackUrl.trim().isBlank()) {
+            missing += app.getString(R.string.login_prereq_xtrack_url)
+        }
+        if (settings.selectedLocationId.trim().isBlank()) {
+            missing += app.getString(R.string.login_prereq_location)
+        }
+
+        if (missing.isEmpty()) return null
+        return app.getString(R.string.login_prereq_message, missing.joinToString(" | "))
+    }
+
+    fun loginXTrack(username: String, password: String) {
+        val reason = getLoginBlockReason()
+        if (reason != null) {
+            _uiState.update { it.copy(loginErrorMessage = reason) }
+            return
+        }
+
+        val xtrackUrl = _uiState.value.appSettings.xtrackUrl.trim()
 
         viewModelScope.launch {
             _uiState.update { it.copy(isLoggingIn = true, loginErrorMessage = null) }

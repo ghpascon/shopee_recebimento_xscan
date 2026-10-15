@@ -68,7 +68,7 @@
         <item quantity="one">%d tag</item>
         <item quantity="other">%d tags</item>
     </plurals>
-    <string name="app_name">X-SCAN</string>
+    <string name="app_name">RECEBIMENTO</string>
     <string name="app_settings_saved">Configurações salvas</string>
     <string name="badge_ble">BLE</string>
     <string name="ble_disabled">Bluetooth está desligado</string>
@@ -92,10 +92,13 @@
     <string name="btn_go_login_screen">Ir para login</string>
     <string name="btn_log_close">Fechar</string>
     <string name="btn_open_reader_config">Configurar leitor/app</string>
+    <string name="btn_open_xtrack_config">Configurar XTrack (URL e localização)</string>
     <string name="btn_reload_config">Recarregar</string>
+    <string name="btn_reload_locations">Carregar localizações</string>
     <string name="btn_save_app_settings">Salvar</string>
     <string name="btn_save_reading">Salvar Leitura</string>
     <string name="btn_save_webhook">Salvar URL</string>
+    <string name="btn_save_xtrack">Salvar XTrack</string>
     <string name="btn_send_all">Enviar Pendentes</string>
     <string name="btn_start_inventory">Iniciar Leitura</string>
     <string name="btn_start_sync">Enviar Pendentes</string>
@@ -123,9 +126,11 @@
     <string name="error_invalid_rssi">Valor RSSI inválido</string>
     <string name="error_invalid_url">URL inválida. Use http:// ou https://</string>
     <string name="error_invalid_webhook_interval">Intervalo inválido. Use um valor maior que zero</string>
+    <string name="error_load_locations">Falha ao carregar localizações: %1$s</string>
     <string name="error_login_empty_fields">Informe usuário e senha</string>
     <string name="error_no_reader">Nenhum leitor selecionado</string>
     <string name="error_power_range">Potência deve ser entre 5 e 33 dBm</string>
+    <string name="error_xtrack_url_required">Informe o xtrack_url para continuar</string>
     <string name="event_json_title">JSON do Evento</string>
     <string name="event_pending">Pendente</string>
     <string name="event_synced">Enviado</string>
@@ -137,12 +142,15 @@
     <string name="footer_device_id">ID: %1$s</string>
     <string name="footer_logout">Logout</string>
     <string name="footer_user_logged">Logado: %1$s</string>
+    <string name="footer_user_logged_with_location">Logado: %1$s | Local: %2$s</string>
     <string name="footer_user_not_authenticated">Não autenticado</string>
     <string name="helper_buzzer">Emite um bipe ao detectar nova tag</string>
+    <string name="helper_location">Usada no recebimento desta operação</string>
     <string name="helper_power">Faixa válida: 5 – 33 dBm</string>
     <string name="helper_prefix">Somente tags com EPC iniciando pelo prefixo serão listadas</string>
     <string name="helper_webhook_url">Ex: https://meuservidor.com/api/rfid</string>
     <string name="helper_xtrack_url">URL do serviço XTrack para integração</string>
+    <string name="hint_location">Selecionar localização</string>
     <string name="hint_power">Potência (dBm)</string>
     <string name="hint_prefix">Ex: E200 ou 3000</string>
     <string name="hint_webhook_url">URL do Webhook</string>
@@ -150,12 +158,15 @@
     <string name="home_btn_confirm">Confirmar</string>
     <string name="home_confirm_todo">Confirmação será implementada no próximo passo</string>
     <string name="home_subtitle">Gerenciamento de leitores RFID</string>
-    <string name="home_tags_section_title">Tags lidas (EPC)</string>
+    <string name="home_tags_section_title">Tags lidas (Descrição)</string>
     <string name="home_total_lido_title">Total lido</string>
+    <string name="home_unregistered_title">Tags não cadastradas</string>
+    <string name="home_unregistered_title_with_count">Tags não cadastradas (%1$d)</string>
     <string name="inventory_name_hint">Ex: Inventário Loja 01</string>
     <string name="inventory_name_required">Informe o nome do inventário</string>
     <string name="inventory_name_title">Nome do inventário</string>
     <string name="label_buzzer">Buzzer</string>
+    <string name="label_location">Localização</string>
     <string name="label_prefix">Filtro de Prefixo EPC</string>
     <string name="label_rssi_filter">Filtro RSSI mínimo</string>
     <string name="label_sending">Enviando...</string>
@@ -167,8 +178,24 @@
     <string name="login_btn_enter">Login</string>
     <string name="login_hint_password">Senha</string>
     <string name="login_hint_user">Usuário</string>
+    <string name="login_prereq_location">selecionar localização</string>
+    <string name="login_prereq_message">Antes do login: %1$s</string>
+    <string name="login_prereq_reader_connected">conectar o leitor</string>
+    <string name="login_prereq_xtrack_url">definir xtrack_url</string>
     <string name="login_recebimento">recebimento</string>
     <string name="login_title">Entrar</string>
+    <string name="move_location_error_connection">Falha na conexão com o XTrack</string>
+    <string name="move_location_error_location_missing">Localização não definida para envio</string>
+    <string name="move_location_error_no_registered_tags">Nenhuma tag cadastrada para enviar</string>
+    <string name="move_location_error_no_retry_context">Não há envio anterior para tentar novamente</string>
+    <string name="move_result_error_message">Falha na conexão. Verifique a rede e tente novamente.\n\nDetalhe: %1$s</string>
+    <string name="move_result_error_title">Falha de conexão</string>
+    <string name="move_result_icon_desc">Resultado do envio</string>
+    <string name="move_result_new_reading">Nova leitura</string>
+    <string name="move_result_retry">Tentar enviar novamente</string>
+    <string name="move_result_sending">Enviando tags para o XTrack...</string>
+    <string name="move_result_success_message">%1$d tag(s) recebida(s) em %2$s</string>
+    <string name="move_result_success_title">Envio concluído</string>
     <string name="nav_config">Configuração</string>
     <string name="nav_config_desc">Ajustar parâmetros</string>
     <string name="nav_reader">Leitor</string>
@@ -189,6 +216,7 @@
     <string name="section_events">Eventos Salvos</string>
     <string name="section_reader_config">Configurações do Leitor</string>
     <string name="section_webhook_config">Configuração do Webhook</string>
+    <string name="section_xtrack_config">Integração XTrack</string>
     <string name="selection_subtitle">Escolha o dispositivo e tente se conectar</string>
     <string name="selection_title">Selecionar Leitor RFID</string>
     <string name="status_connected">Conectado: %s</string>
@@ -206,6 +234,10 @@
     <string name="tab_reading">Leitura</string>
     <string name="tag_count">%d tags</string>
     <string name="tag_count_zero">0 tags</string>
+    <string name="tag_description_loading">Buscando descrição...</string>
+    <string name="tag_epc_only">EPC: %1$s</string>
+    <string name="tag_epc_with_idcode">IDCODE: %1$s | EPC: %2$s</string>
+    <string name="tag_not_registered">Não cadastrado</string>
     <string name="webhook_example_url">http://192.168.1.100:5000/api/v1/receive/x-scan</string>
     <string name="webhook_not_configured">Nenhum webhook configurado</string>
     <string name="webhook_saved">URL do webhook salva</string>
@@ -213,6 +245,15 @@
     <string name="webhook_send_success">Último: %1$d enviado(s) às %2$s</string>
     <string name="webhook_status_active">Webhook ativo: Sim</string>
     <string name="webhook_status_inactive">Webhook ativo: Não</string>
+    <string name="xtrack_details_error">Falha: %1$s</string>
+    <string name="xtrack_details_loading">Carregando localizações de %1$s usando comando GetLocation/ERP...</string>
+    <string name="xtrack_details_placeholder">Sem tentativas recentes.</string>
+    <string name="xtrack_details_success">Sucesso: %1$d localização(ões) carregada(s). Exemplo: %2$s</string>
+    <string name="xtrack_details_title">Detalhes técnicos</string>
+    <string name="xtrack_warning_checking">Verificando comunicação com XTrack...</string>
+    <string name="xtrack_warning_prefix">Aviso XTrack: %1$s</string>
+    <string name="xtrack_warning_retry_hint">Toque para tentar novamente.</string>
+    <string name="xtrack_warning_unknown">falha desconhecida</string>
     <string name="zebra_transport_bt">Bluetooth</string>
     <string name="zebra_transport_message">Selecione o tipo de conexão para o leitor Zebra.</string>
     <string name="zebra_transport_serial">Serial</string>
@@ -243,7 +284,7 @@
         <item name="colorOutline">@color/md_theme_outline</item>
         <item name="colorOutlineVariant">@color/md_theme_outlineVariant</item>
         
-        <item name="appLogo">@drawable/logo</item>
+        <item name="appLogo">@drawable/shopee_logo</item>
     </style>
     <style name="Theme.RfidReader" parent="Base.Theme.RfidReader"/>
 </resources>

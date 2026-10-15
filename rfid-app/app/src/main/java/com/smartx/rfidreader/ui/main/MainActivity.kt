@@ -54,8 +54,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         // Observa e atualiza o header global (leitor + status de conexão)
         observeHeader()
 
+        // Sempre tenta reconectar no último leitor salvo (padrão XR2 no primeiro uso).
+        viewModel.autoConnectLastReader()
+
         if (savedInstanceState == null) {
-            loadHomeOrLogin()
+            loadLogin()
         }
 
         supportFragmentManager.addOnBackStackChangedListener {
@@ -107,6 +110,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             .commit()
     }
 
+    private fun loadConfigAccess() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, ConfigAccessFragment(), TAG_CONFIG_ACCESS)
+            .commit()
+    }
+
     fun goHome() {
         supportFragmentManager.popBackStackImmediate(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
         loadHomeOrLogin()
@@ -115,7 +124,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun enforceAuthOnHome() {
         val current = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
         if (current is HomeFragment && !viewModel.uiState.value.isAuthenticated) {
-            loadLogin()
+            loadHomeOrLogin()
         }
     }
 
@@ -233,7 +242,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun onLogoutPressed() {
-        viewModel.disconnect()
         supportFragmentManager.popBackStackImmediate(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
         loadLogin()
     }

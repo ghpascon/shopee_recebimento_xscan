@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.smartx.rfidreader.core.xtrack.XTrackManagerParserTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-15T13:32:01" hostname="gabriel-Latitude-3420" time="0.199">
+  <properties/>
+  <testcase name="parseObjectInfosXml_mapsRfidIdCodeToDescriptionAndObjectIdCode" classname="com.smartx.rfidreader.core.xtrack.XTrackManagerParserTest" time="0.197"/>
+  <testcase name="parseLocationsXml_ignoresRowsWithoutIdAndName" classname="com.smartx.rfidreader.core.xtrack.XTrackManagerParserTest" time="0.001"/>
+  <testcase name="parseLocationsXml_parsesGetLocationResponse" classname="com.smartx.rfidreader.core.xtrack.XTrackManagerParserTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

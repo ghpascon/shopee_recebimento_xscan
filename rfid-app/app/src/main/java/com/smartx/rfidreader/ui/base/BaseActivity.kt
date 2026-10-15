@@ -14,6 +14,7 @@ import androidx.viewbinding.ViewBinding
 import com.smartx.rfidreader.R
 import com.smartx.rfidreader.core.reader.ActiveReaderState
 import com.smartx.rfidreader.core.reader.ReaderConnectionState
+import com.smartx.rfidreader.core.settings.AppSettingsRepository
 import com.smartx.rfidreader.core.xtrack.xtrack_manager
 import com.smartx.rfidreader.databinding.ActivityBaseBinding
 import com.smartx.rfidreader.databinding.HeaderAppBinding
@@ -38,6 +39,7 @@ import kotlinx.coroutines.launch
 abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
     private lateinit var _baseBinding: ActivityBaseBinding
+    private lateinit var settingsRepo: AppSettingsRepository
 
     /** Binding do conteúdo específico da tela — disponível em onActivityReady */
     protected lateinit var binding: VB
@@ -49,6 +51,7 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _baseBinding = ActivityBaseBinding.inflate(layoutInflater)
+        settingsRepo = AppSettingsRepository(applicationContext)
         setContentView(_baseBinding.root)
 
         // Infla o layout da subclasse e insere no slot central
@@ -115,7 +118,11 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
                         }
                 }
                 launch {
-                    xtrack_manager.currentUser.collect { user ->
+                    kotlinx.coroutines.flow.combine(
+                        xtrack_manager.currentUser,
+                        settingsRepo.flow
+                    ) { user, settings -> user to settings }
+                        .collect { (user, settings) ->
                         val isLoggedIn = user != null
                         _baseBinding.footerApp.footerLogoutButton.visibility =
                             if (isLoggedIn) View.VISIBLE else View.GONE
@@ -123,10 +130,20 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
                         _baseBinding.footerApp.footerUserInfo.text = if (user == null) {
                             getString(R.string.footer_user_not_authenticated)
                         } else {
-                            getString(
-                                R.string.footer_user_logged,
-                                user.name.ifBlank { user.login }
-                            )
+                            val locationLabel = settings.selectedLocationName
+                                .ifBlank { settings.selectedLocationId }
+                            if (locationLabel.isBlank()) {
+                                getString(
+                                    R.string.footer_user_logged,
+                                    user.name.ifBlank { user.login }
+                                )
+                            } else {
+                                getString(
+                                    R.string.footer_user_logged_with_location,
+                                    user.name.ifBlank { user.login },
+                                    locationLabel
+                                )
+                            }
                         }
                     }
                 }

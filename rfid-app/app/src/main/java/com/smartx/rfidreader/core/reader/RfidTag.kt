@@ -9,5 +9,8 @@ data class RfidTag(
     val user: String = "",
     val antenna: Int = 1,
     val readCount: Int = 1,
-    val timestamp: Date = Date()
+    val timestamp: Date = Date(),
+    val description: String = "",
+    val objectIdCode: String = "",
+    val descriptionLookupError: Boolean = false
 )

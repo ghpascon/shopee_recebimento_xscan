@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.smartx.rfidreader.R
+import com.smartx.rfidreader.core.reader.RfidTag
 import com.smartx.rfidreader.core.reader.ReaderConnectionState
 import com.smartx.rfidreader.core.webhook.WebhookService
 import com.smartx.rfidreader.databinding.FragmentHomeBinding
@@ -23,9 +24,12 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MainViewModel by activityViewModels()
-    private lateinit var epcAdapter: HomeEpcAdapter
+    private lateinit var registeredAdapter: HomeEpcAdapter
+    private lateinit var unregisteredAdapter: HomeUnregisteredAdapter
     private var currentTagCount: Int = 0
     private var isCurrentlyInventorying: Boolean = false
+    private var allTagsWithDescription: Boolean = false
+    private var hasRegisteredTags: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +49,7 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        viewModel.clearTags()
         stopWebhookSendingOnHome()
     }
 
@@ -57,15 +62,22 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        epcAdapter = HomeEpcAdapter()
+        registeredAdapter = HomeEpcAdapter()
+        unregisteredAdapter = HomeUnregisteredAdapter()
+
         binding.recyclerEpcs.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerEpcs.adapter = epcAdapter
+        binding.recyclerEpcs.adapter = registeredAdapter
+        binding.recyclerEpcs.isNestedScrollingEnabled = false
+
+        binding.recyclerUnregisteredTags.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerUnregisteredTags.adapter = unregisteredAdapter
+        binding.recyclerUnregisteredTags.isNestedScrollingEnabled = false
     }
 
     private fun setupActions() {
         binding.btnConfirm.isEnabled = false
         binding.btnConfirm.setOnClickListener {
-            Snackbar.make(binding.root, getString(R.string.home_confirm_todo), Snackbar.LENGTH_SHORT).show()
+            viewModel.confirmMoveLocation()
         }
     }
 
@@ -75,8 +87,15 @@ class HomeFragment : Fragment() {
                 launch {
                     viewModel.tags.collect { tags ->
                         currentTagCount = tags.size
+                        allTagsWithDescription = tags.isNotEmpty() && tags.all { it.description.isNotBlank() }
                         binding.textTotalLido.text = currentTagCount.toString()
-                        epcAdapter.submitList(tags.map { it.epc })
+
+                        val unregisteredTags = tags.filter { it.descriptionLookupError }
+                        val tagsForMainList = tags.filterNot { it.descriptionLookupError }
+                        hasRegisteredTags = tagsForMainList.any { it.objectIdCode.isNotBlank() }
+
+                        updateUnregisteredTagsSection(unregisteredTags)
+                        registeredAdapter.submitList(tagsForMainList.toList())
                         updateConfirmButtonState()
                     }
                 }
@@ -88,12 +107,36 @@ class HomeFragment : Fragment() {
                         updateConfirmButtonState()
                     }
                 }
+
+                launch {
+                    viewModel.moveLocationResult.collect { result ->
+                        val activity = requireActivity() as MainActivity
+                        activity.navigateTo(ConfirmResultFragment.newInstance(result))
+                    }
+                }
             }
         }
     }
 
     private fun updateConfirmButtonState() {
-        binding.btnConfirm.isEnabled = currentTagCount > 0 && !isCurrentlyInventorying
+        binding.btnConfirm.isEnabled =
+            currentTagCount > 0 &&
+                !isCurrentlyInventorying &&
+                allTagsWithDescription &&
+                hasRegisteredTags
+    }
+
+    private fun updateUnregisteredTagsSection(tags: List<RfidTag>) {
+        if (tags.isEmpty()) {
+            binding.cardUnregisteredTags.visibility = View.GONE
+            unregisteredAdapter.submitList(emptyList())
+            return
+        }
+
+        binding.cardUnregisteredTags.visibility = View.VISIBLE
+        binding.textUnregisteredTitle.text =
+            getString(R.string.home_unregistered_title_with_count, tags.size)
+        unregisteredAdapter.submitList(tags.map { it.epc })
     }
 
     private fun updateHomeStatus(state: MainUiState) {
