@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.core.xtrack
+package com.smartx.shopeerecebimento.core.xtrack
 
 import android.util.Log
 import kotlinx.coroutines.Dispatchers

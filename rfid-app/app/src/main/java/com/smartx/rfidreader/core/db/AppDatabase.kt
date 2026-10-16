@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.core.db
+package com.smartx.shopeerecebimento.core.db
 
 import android.content.Context
 import androidx.room.Database

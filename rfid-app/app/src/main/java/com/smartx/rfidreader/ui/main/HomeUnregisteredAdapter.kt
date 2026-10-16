@@ -1,11 +1,11 @@
-package com.smartx.rfidreader.ui.main
+package com.smartx.shopeerecebimento.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.smartx.rfidreader.databinding.ItemUnregisteredEpcBinding
+import com.smartx.shopeerecebimento.databinding.ItemUnregisteredEpcBinding
 
 class HomeUnregisteredAdapter :
     ListAdapter<String, HomeUnregisteredAdapter.ViewHolder>(DiffCallback()) {

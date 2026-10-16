@@ -1,10 +1,10 @@
-package com.smartx.rfidreader
+package com.smartx.shopeerecebimento
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.smartx.rfidreader.core.db.AppDatabase
-import com.smartx.rfidreader.core.events.EventRepository
-import com.smartx.rfidreader.core.settings.AppSettingsRepository
+import com.smartx.shopeerecebimento.core.db.AppDatabase
+import com.smartx.shopeerecebimento.core.events.EventRepository
+import com.smartx.shopeerecebimento.core.settings.AppSettingsRepository
 
 class RfidApplication : Application() {
 

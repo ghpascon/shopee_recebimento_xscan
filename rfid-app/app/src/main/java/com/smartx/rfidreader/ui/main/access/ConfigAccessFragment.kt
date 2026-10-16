@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.ui.main.access
+package com.smartx.shopeerecebimento.ui.main.access
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
-import com.smartx.rfidreader.databinding.FragmentConfigAccessBinding
-import com.smartx.rfidreader.ui.main.MainActivity
-import com.smartx.rfidreader.ui.main.MainViewModel
-import com.smartx.rfidreader.ui.main.config.ConfigFragment
-import com.smartx.rfidreader.ui.main.config.XTrackConfigFragment
-import com.smartx.rfidreader.ui.main.login.LoginFragment
-import com.smartx.rfidreader.ui.main.reader.ReaderSelectionFragment
+import com.smartx.shopeerecebimento.databinding.FragmentConfigAccessBinding
+import com.smartx.shopeerecebimento.ui.main.MainActivity
+import com.smartx.shopeerecebimento.ui.main.MainViewModel
+import com.smartx.shopeerecebimento.ui.main.config.ConfigFragment
+import com.smartx.shopeerecebimento.ui.main.config.XTrackConfigFragment
+import com.smartx.shopeerecebimento.ui.main.login.LoginFragment
+import com.smartx.shopeerecebimento.ui.main.reader.ReaderSelectionFragment
 
 class ConfigAccessFragment : Fragment() {
 

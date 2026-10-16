@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.core.webhook
+package com.smartx.shopeerecebimento.core.webhook
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

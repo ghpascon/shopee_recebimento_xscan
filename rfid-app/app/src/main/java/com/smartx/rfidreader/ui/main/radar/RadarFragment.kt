@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.ui.main.radar
+package com.smartx.shopeerecebimento.ui.main.radar
 
 import android.media.AudioFormat
 import android.media.AudioManager
@@ -18,10 +18,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.smartx.rfidreader.R
-import com.smartx.rfidreader.core.reader.ReaderConnectionState
-import com.smartx.rfidreader.databinding.FragmentRadarBinding
-import com.smartx.rfidreader.ui.main.MainViewModel
+import com.smartx.shopeerecebimento.R
+import com.smartx.shopeerecebimento.core.reader.ReaderConnectionState
+import com.smartx.shopeerecebimento.databinding.FragmentRadarBinding
+import com.smartx.shopeerecebimento.ui.main.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive

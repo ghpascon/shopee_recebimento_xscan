@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.ui.main
+package com.smartx.shopeerecebimento.ui.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,8 +9,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.smartx.rfidreader.R
-import com.smartx.rfidreader.databinding.FragmentConfirmResultBinding
+import com.smartx.shopeerecebimento.R
+import com.smartx.shopeerecebimento.databinding.FragmentConfirmResultBinding
 import kotlinx.coroutines.launch
 
 class ConfirmResultFragment : Fragment() {

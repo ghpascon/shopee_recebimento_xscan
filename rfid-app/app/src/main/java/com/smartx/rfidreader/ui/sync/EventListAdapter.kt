@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.ui.sync
+package com.smartx.shopeerecebimento.ui.sync
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.smartx.rfidreader.R
-import com.smartx.rfidreader.core.db.EventEntity
-import com.smartx.rfidreader.databinding.ItemEventBinding
+import com.smartx.shopeerecebimento.R
+import com.smartx.shopeerecebimento.core.db.EventEntity
+import com.smartx.shopeerecebimento.databinding.ItemEventBinding
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle

@@ -1,12 +1,12 @@
-package com.smartx.rfidreader.ui.sync
+package com.smartx.shopeerecebimento.ui.sync
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.smartx.rfidreader.RfidApplication
-import com.smartx.rfidreader.core.db.EventEntity
-import com.smartx.rfidreader.core.events.EventRepository
-import com.smartx.rfidreader.core.settings.AppSettingsRepository
+import com.smartx.shopeerecebimento.RfidApplication
+import com.smartx.shopeerecebimento.core.db.EventEntity
+import com.smartx.shopeerecebimento.core.events.EventRepository
+import com.smartx.shopeerecebimento.core.settings.AppSettingsRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 

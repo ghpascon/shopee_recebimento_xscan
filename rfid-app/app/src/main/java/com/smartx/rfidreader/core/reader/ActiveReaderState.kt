@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.core.reader
+package com.smartx.shopeerecebimento.core.reader
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

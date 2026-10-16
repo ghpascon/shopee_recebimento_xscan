@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.readers.cfh301
+package com.smartx.shopeerecebimento.readers.cfh301
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
@@ -14,10 +14,10 @@ import android.bluetooth.BluetoothStatusCodes
 import android.content.Context
 import android.os.Build
 import android.util.Log
-import com.smartx.rfidreader.core.reader.IRfidReader
-import com.smartx.rfidreader.core.reader.ReaderConfig
-import com.smartx.rfidreader.core.reader.ReaderConnectionState
-import com.smartx.rfidreader.core.reader.RfidTag
+import com.smartx.shopeerecebimento.core.reader.IRfidReader
+import com.smartx.shopeerecebimento.core.reader.ReaderConfig
+import com.smartx.shopeerecebimento.core.reader.ReaderConnectionState
+import com.smartx.shopeerecebimento.core.reader.RfidTag
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

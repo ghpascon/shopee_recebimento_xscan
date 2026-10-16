@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.core.xtrack
+package com.smartx.shopeerecebimento.core.xtrack
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

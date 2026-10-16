@@ -1,11 +1,11 @@
-package com.smartx.rfidreader.readers.x714
+package com.smartx.shopeerecebimento.readers.x714
 
 import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.content.Context
 import android.os.Build
 import android.util.Log
-import com.smartx.rfidreader.core.reader.*
+import com.smartx.shopeerecebimento.core.reader.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.util.UUID

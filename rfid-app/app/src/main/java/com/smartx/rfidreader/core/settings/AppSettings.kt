@@ -1,10 +1,10 @@
-package com.smartx.rfidreader.core.settings
+package com.smartx.shopeerecebimento.core.settings
 
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
-import com.smartx.rfidreader.core.reader.ReaderConfig
+import com.smartx.shopeerecebimento.core.reader.ReaderConfig
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map

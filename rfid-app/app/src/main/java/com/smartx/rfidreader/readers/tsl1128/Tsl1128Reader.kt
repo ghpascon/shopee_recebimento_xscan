@@ -1,8 +1,8 @@
-package com.smartx.rfidreader.readers.tsl1128
+package com.smartx.shopeerecebimento.readers.tsl1128
 
 import android.content.Context
 import android.util.Log
-import com.smartx.rfidreader.core.reader.*
+import com.smartx.shopeerecebimento.core.reader.*
 import com.uk.tsl.rfid.asciiprotocol.AsciiCommander
 import com.uk.tsl.rfid.asciiprotocol.commands.AbortCommand
 import com.uk.tsl.rfid.asciiprotocol.commands.InventoryCommand

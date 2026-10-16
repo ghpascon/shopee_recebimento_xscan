@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.ui.main
+package com.smartx.shopeerecebimento.ui.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,11 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.smartx.rfidreader.R
-import com.smartx.rfidreader.core.reader.RfidTag
-import com.smartx.rfidreader.core.reader.ReaderConnectionState
-import com.smartx.rfidreader.core.webhook.WebhookService
-import com.smartx.rfidreader.databinding.FragmentHomeBinding
+import com.smartx.shopeerecebimento.R
+import com.smartx.shopeerecebimento.core.reader.RfidTag
+import com.smartx.shopeerecebimento.core.reader.ReaderConnectionState
+import com.smartx.shopeerecebimento.core.webhook.WebhookService
+import com.smartx.shopeerecebimento.databinding.FragmentHomeBinding
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {

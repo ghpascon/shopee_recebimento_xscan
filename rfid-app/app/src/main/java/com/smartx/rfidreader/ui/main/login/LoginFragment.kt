@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.ui.main.login
+package com.smartx.shopeerecebimento.ui.main.login
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,9 +11,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
-import com.smartx.rfidreader.R
-import com.smartx.rfidreader.databinding.FragmentLoginBinding
-import com.smartx.rfidreader.ui.main.MainViewModel
+import com.smartx.shopeerecebimento.R
+import com.smartx.shopeerecebimento.databinding.FragmentLoginBinding
+import com.smartx.shopeerecebimento.ui.main.MainViewModel
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {

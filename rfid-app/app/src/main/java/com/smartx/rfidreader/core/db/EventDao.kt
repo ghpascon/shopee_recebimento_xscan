@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.core.db
+package com.smartx.shopeerecebimento.core.db
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

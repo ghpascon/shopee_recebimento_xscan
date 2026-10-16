@@ -1,71 +1,71 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-3    package="com.smartx.rfidreader"
-4    android:versionCode="51"
-5    android:versionName="6.7.0" > <!-- Allow TSL SDK (minSdk 26) to be merged without raising project minSdk -->
+3    package="com.smartx.shopeerecebimento"
+4    android:versionCode="52"
+5    android:versionName="7.0.0" > <!-- Allow TSL SDK (minSdk 26) to be merged without raising project minSdk -->
 6    <uses-sdk
-6-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:6:5-71
+6-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:6:5-71
 7        android:minSdkVersion="29"
 8        android:targetSdkVersion="34" />
 9
 10    <!-- Permissões Bluetooth (cobre API 21–30 e 31+) -->
 11    <uses-permission
-11-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:9:5-68
+11-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:9:5-68
 12        android:name="android.permission.BLUETOOTH"
-12-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:9:22-65
+12-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:9:22-65
 13        android:maxSdkVersion="30" />
 13-->[:Rfid.AsciiProtocol-3.5.0-release:] /home/gabriel/.gradle/caches/8.10.2/transforms/46fd2bcc426522fd195333b5f72c997d/transformed/jetified-Rfid.AsciiProtocol-3.5.0-release/AndroidManifest.xml:9:9-35
 14    <uses-permission
-14-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:10:5-74
+14-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:10:5-74
 15        android:name="android.permission.BLUETOOTH_ADMIN"
-15-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:10:22-71
+15-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:10:22-71
 16        android:maxSdkVersion="30" />
 16-->[:Rfid.AsciiProtocol-3.5.0-release:] /home/gabriel/.gradle/caches/8.10.2/transforms/46fd2bcc426522fd195333b5f72c997d/transformed/jetified-Rfid.AsciiProtocol-3.5.0-release/AndroidManifest.xml:12:9-35
 17    <uses-permission
-17-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:11:5-13:38
+17-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:11:5-13:38
 18        android:name="android.permission.BLUETOOTH_CONNECT"
-18-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:12:9-60
+18-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:12:9-60
 19        android:minSdkVersion="31" />
-19-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:13:9-35
+19-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:13:9-35
 20    <uses-permission
-20-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:14:5-17:58
+20-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:14:5-17:58
 21        android:name="android.permission.BLUETOOTH_SCAN"
-21-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:15:9-57
+21-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:15:9-57
 22        android:minSdkVersion="31"
-22-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:16:9-35
+22-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:16:9-35
 23        android:usesPermissionFlags="neverForLocation" />
-23-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:17:9-55
+23-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:17:9-55
 24
 25    <!-- Permissões de localização (necessárias para Bluetooth scan em API 23–30) -->
 26    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-26-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:20:5-79
-26-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:20:22-76
+26-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:20:5-79
+26-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:20:22-76
 27    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-27-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:21:5-81
-27-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:21:22-78
+27-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:21:5-81
+27-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:21:22-78
 28
 29    <!-- Permissões de serviço e hardware -->
 30    <uses-permission android:name="android.permission.INTERNET" />
-30-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:24:5-67
-30-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:24:22-64
+30-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:24:5-67
+30-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:24:22-64
 31    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-31-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:25:5-77
-31-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:25:22-74
+31-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:25:5-77
+31-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:25:22-74
 32    <uses-permission android:name="android.permission.VIBRATE" />
-32-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:26:5-66
-32-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:26:22-63
+32-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:26:5-66
+32-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:26:22-63
 33    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 33-->[rfidapi3lib-2.0.5.275.aar] /home/gabriel/.gradle/caches/8.10.2/transforms/8379c2d9bc62ad73a5e038bb69cb768d/transformed/jetified-rfidapi3lib-2.0.5.275/AndroidManifest.xml:12:5-80
 33-->[rfidapi3lib-2.0.5.275.aar] /home/gabriel/.gradle/caches/8.10.2/transforms/8379c2d9bc62ad73a5e038bb69cb768d/transformed/jetified-rfidapi3lib-2.0.5.275/AndroidManifest.xml:12:22-77
 34
 35    <permission
 35-->[androidx.core:core:1.13.1] /home/gabriel/.gradle/caches/8.10.2/transforms/ff71e4781ad131b06a6fa55b996f5869/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
-36        android:name="com.smartx.rfidreader.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+36        android:name="com.smartx.shopeerecebimento.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
 36-->[androidx.core:core:1.13.1] /home/gabriel/.gradle/caches/8.10.2/transforms/ff71e4781ad131b06a6fa55b996f5869/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
 37        android:protectionLevel="signature" />
 37-->[androidx.core:core:1.13.1] /home/gabriel/.gradle/caches/8.10.2/transforms/ff71e4781ad131b06a6fa55b996f5869/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
 38
-39    <uses-permission android:name="com.smartx.rfidreader.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+39    <uses-permission android:name="com.smartx.shopeerecebimento.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 39-->[androidx.core:core:1.13.1] /home/gabriel/.gradle/caches/8.10.2/transforms/ff71e4781ad131b06a6fa55b996f5869/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
 39-->[androidx.core:core:1.13.1] /home/gabriel/.gradle/caches/8.10.2/transforms/ff71e4781ad131b06a6fa55b996f5869/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
 40    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -79,70 +79,70 @@
 42-->[:DeviceAPI_ver20251103_release:] /home/gabriel/.gradle/caches/8.10.2/transforms/432b581c89bc8153685696d644303e00/transformed/jetified-DeviceAPI_ver20251103_release/AndroidManifest.xml:15:22-73
 43
 44    <application
-44-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:28:5-63:19
-45        android:name="com.smartx.rfidreader.RfidApplication"
-45-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:29:9-40
+44-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:28:5-63:19
+45        android:name="com.smartx.shopeerecebimento.RfidApplication"
+45-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:29:9-40
 46        android:allowBackup="true"
-46-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:30:9-35
+46-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:30:9-35
 47        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 47-->[androidx.core:core:1.13.1] /home/gabriel/.gradle/caches/8.10.2/transforms/ff71e4781ad131b06a6fa55b996f5869/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
 48        android:debuggable="true"
 49        android:extractNativeLibs="false"
 50        android:icon="@drawable/shopee_logo"
-50-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:31:9-45
+50-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:31:9-45
 51        android:label="@string/app_name"
-51-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:32:9-41
+51-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:32:9-41
 52        android:roundIcon="@drawable/shopee_logo"
-52-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:33:9-50
+52-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:33:9-50
 53        android:supportsRtl="true"
-53-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:34:9-35
+53-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:34:9-35
 54        android:theme="@style/Theme.RfidReader"
-54-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:36:9-48
+54-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:36:9-48
 55        android:usesCleartextTraffic="true" >
-55-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:35:9-44
+55-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:35:9-44
 56
 57        <!-- Tela principal: seleção de leitor + config + leitura (3 abas) -->
 58        <activity
-58-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:40:9-49:20
-59            android:name="com.smartx.rfidreader.ui.main.MainActivity"
-59-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:41:13-49
+58-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:40:9-49:20
+59            android:name="com.smartx.shopeerecebimento.ui.main.MainActivity"
+59-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:41:13-49
 60            android:exported="true"
-60-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:42:13-36
+60-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:42:13-36
 61            android:screenOrientation="portrait"
-61-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:43:13-49
+61-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:43:13-49
 62            android:windowSoftInputMode="adjustResize" >
-62-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:44:13-55
+62-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:44:13-55
 63            <intent-filter>
-63-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:45:13-48:29
+63-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:45:13-48:29
 64                <action android:name="android.intent.action.MAIN" />
-64-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:46:17-69
-64-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:46:25-66
+64-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:46:17-69
+64-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:46:25-66
 65
 66                <category android:name="android.intent.category.LAUNCHER" />
-66-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:47:17-77
-66-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:47:27-74
+66-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:47:17-77
+66-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:47:27-74
 67            </intent-filter>
 68        </activity>
 69
 70        <!-- Tela legada de seleção de leitor (não usada como launcher) -->
 71        <activity
-71-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:52:9-56:58
-72            android:name="com.smartx.rfidreader.ui.selection.ReaderSelectionActivity"
-72-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:53:13-65
+71-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:52:9-56:58
+72            android:name="com.smartx.shopeerecebimento.ui.selection.ReaderSelectionActivity"
+72-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:53:13-65
 73            android:exported="false"
-73-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:54:13-37
+73-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:54:13-37
 74            android:screenOrientation="portrait"
-74-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:55:13-49
+74-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:55:13-49
 75            android:windowSoftInputMode="adjustResize" />
-75-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:56:13-55
+75-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:56:13-55
 76
 77        <!-- Serviço de webhook que envia leituras periodicamente em foreground -->
 78        <service
-78-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:59:9-61:40
-79            android:name="com.smartx.rfidreader.core.webhook.WebhookService"
-79-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:60:13-56
+78-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:59:9-61:40
+79            android:name="com.smartx.shopeerecebimento.core.webhook.WebhookService"
+79-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:60:13-56
 80            android:exported="false" />
-80-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shoppee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:61:13-37
+80-->/home/gabriel/Desktop/_SMARTX/clients/shopee/shopee_recebimento_xscan/rfid-app/app/src/main/AndroidManifest.xml:61:13-37
 81
 82        <activity
 82-->[com.google.android.gms:play-services-base:18.5.0] /home/gabriel/.gradle/caches/8.10.2/transforms/7b45dff998929ab6133d36421692903d/transformed/jetified-play-services-base-18.5.0/AndroidManifest.xml:5:9-173
@@ -164,7 +164,7 @@
 91-->[androidx.emoji2:emoji2:1.3.0] /home/gabriel/.gradle/caches/8.10.2/transforms/eba329333aca7c5cd83236a647ef4589/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
 92            android:name="androidx.startup.InitializationProvider"
 92-->[androidx.emoji2:emoji2:1.3.0] /home/gabriel/.gradle/caches/8.10.2/transforms/eba329333aca7c5cd83236a647ef4589/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:25:13-67
-93            android:authorities="com.smartx.rfidreader.androidx-startup"
+93            android:authorities="com.smartx.shopeerecebimento.androidx-startup"
 93-->[androidx.emoji2:emoji2:1.3.0] /home/gabriel/.gradle/caches/8.10.2/transforms/eba329333aca7c5cd83236a647ef4589/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:26:13-68
 94            android:exported="false" >
 94-->[androidx.emoji2:emoji2:1.3.0] /home/gabriel/.gradle/caches/8.10.2/transforms/eba329333aca7c5cd83236a647ef4589/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:27:13-37

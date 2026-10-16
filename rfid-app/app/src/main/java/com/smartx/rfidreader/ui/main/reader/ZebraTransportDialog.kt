@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.ui.main.reader
+package com.smartx.shopeerecebimento.ui.main.reader
 
 import android.app.Activity
 import android.content.Context
@@ -6,8 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.smartx.rfidreader.R
-import com.smartx.rfidreader.databinding.DialogZebraTransportBinding
+import com.smartx.shopeerecebimento.R
+import com.smartx.shopeerecebimento.databinding.DialogZebraTransportBinding
 
 object ZebraTransportDialog {
 

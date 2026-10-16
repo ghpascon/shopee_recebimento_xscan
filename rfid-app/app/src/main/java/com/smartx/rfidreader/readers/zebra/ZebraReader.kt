@@ -1,8 +1,8 @@
-package com.smartx.rfidreader.readers.zebra
+package com.smartx.shopeerecebimento.readers.zebra
 
 import android.content.Context
 import android.util.Log
-import com.smartx.rfidreader.core.reader.*
+import com.smartx.shopeerecebimento.core.reader.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

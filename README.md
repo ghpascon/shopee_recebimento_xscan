@@ -40,8 +40,8 @@ Suporta múltiplos modelos de leitor por meio de uma interface unificada; adicio
 
 | Item            | Valor                             |
 | --------------- | --------------------------------- |
-| Package         | `com.smartx.rfidreader`           |
-| `applicationId` | `com.smartx.rfidreader`           |
+| Package         | `com.smartx.shopeerecebimento`    |
+| `applicationId` | `com.smartx.shopeerecebimento`    |
 | `versionName`   | `2.0.0`                           |
 | `minSdk`        | 24 (Android 7.0)                  |
 | `targetSdk`     | 34 (Android 14)                   |
@@ -380,10 +380,10 @@ implementation(name: 'nome_do_sdk', ext: 'aar')
 Crie `readers/novomodelo/NovoModeloReader.kt`:
 
 ```kotlin
-package com.smartx.rfidreader.readers.novomodelo
+package com.smartx.shopeerecebimento.readers.novomodelo
 
 import android.content.Context
-import com.smartx.rfidreader.core.reader.*
+import com.smartx.shopeerecebimento.core.reader.*
 import kotlinx.coroutines.flow.*
 
 class NovoModeloReader : IRfidReader {

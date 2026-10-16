@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.core.reader
+package com.smartx.shopeerecebimento.core.reader
 
 import android.content.Context
 import kotlinx.coroutines.flow.Flow

@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.ui.main.config
+package com.smartx.shopeerecebimento.ui.main.config
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,12 +11,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
-import com.smartx.rfidreader.R
-import com.smartx.rfidreader.core.settings.AppSettings
-import com.smartx.rfidreader.core.xtrack.XTrackLocation
-import com.smartx.rfidreader.core.xtrack.xtrack_manager
-import com.smartx.rfidreader.databinding.FragmentXtrackConfigBinding
-import com.smartx.rfidreader.ui.main.MainViewModel
+import com.smartx.shopeerecebimento.R
+import com.smartx.shopeerecebimento.core.settings.AppSettings
+import com.smartx.shopeerecebimento.core.xtrack.XTrackLocation
+import com.smartx.shopeerecebimento.core.xtrack.xtrack_manager
+import com.smartx.shopeerecebimento.databinding.FragmentXtrackConfigBinding
+import com.smartx.shopeerecebimento.ui.main.MainViewModel
 import kotlinx.coroutines.launch
 
 class XTrackConfigFragment : Fragment() {

@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.ui.main
+package com.smartx.shopeerecebimento.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,9 +6,9 @@ import com.google.android.material.color.MaterialColors
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.smartx.rfidreader.R
-import com.smartx.rfidreader.core.reader.RfidTag
-import com.smartx.rfidreader.databinding.ItemHomeEpcBinding
+import com.smartx.shopeerecebimento.R
+import com.smartx.shopeerecebimento.core.reader.RfidTag
+import com.smartx.shopeerecebimento.databinding.ItemHomeEpcBinding
 
 class HomeEpcAdapter : ListAdapter<RfidTag, HomeEpcAdapter.ViewHolder>(DiffCallback()) {
 

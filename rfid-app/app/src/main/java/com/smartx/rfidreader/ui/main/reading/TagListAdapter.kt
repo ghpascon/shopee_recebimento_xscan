@@ -1,12 +1,12 @@
-package com.smartx.rfidreader.ui.main.reading
+package com.smartx.shopeerecebimento.ui.main.reading
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.smartx.rfidreader.core.reader.RfidTag
-import com.smartx.rfidreader.databinding.ItemTagBinding
+import com.smartx.shopeerecebimento.core.reader.RfidTag
+import com.smartx.shopeerecebimento.databinding.ItemTagBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 

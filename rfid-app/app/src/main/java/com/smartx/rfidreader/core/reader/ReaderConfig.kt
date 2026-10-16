@@ -1,4 +1,4 @@
-package com.smartx.rfidreader.core.reader
+package com.smartx.shopeerecebimento.core.reader
 
 /**
  * Modelo de configuração unificado para todos os leitores RFID.
