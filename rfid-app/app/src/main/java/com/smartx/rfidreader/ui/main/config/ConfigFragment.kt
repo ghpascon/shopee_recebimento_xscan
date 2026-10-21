@@ -29,6 +29,7 @@ class ConfigFragment : Fragment() {
 
     // Lista local de prefixos em edição
     private val currentPrefixes = mutableListOf<String>()
+    private val currentEpcLengths = mutableListOf<Int>()
     private var isUpdatingFromState = false
 
     override fun onCreateView(
@@ -97,6 +98,19 @@ class ConfigFragment : Fragment() {
             } else false
         }
 
+        binding.btnAddEpcLength.setOnClickListener { addEpcLengthFromInput() }
+        binding.editEpcLength.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                addEpcLengthFromInput()
+                true
+            } else false
+        }
+        binding.btnClearEpcLengths.setOnClickListener {
+            currentEpcLengths.clear()
+            renderEpcLengthChips()
+            saveAppSettings()
+        }
+
         // Limpar prefixos
         binding.btnClearPrefixes.setOnClickListener {
             currentPrefixes.clear()
@@ -137,6 +151,42 @@ class ConfigFragment : Fragment() {
         }
     }
 
+    private fun addEpcLengthFromInput() {
+        val text = binding.editEpcLength.text?.toString()?.trim().orEmpty()
+        val length = text.toIntOrNull()?.takeIf { it > 0 }
+        if (length == null) {
+            binding.layoutEpcLength.error = getString(R.string.error_epc_len_invalid)
+            return
+        }
+        binding.layoutEpcLength.error = null
+        if (length in currentEpcLengths) {
+            showSnackbar(getString(R.string.epc_length_already_exists))
+            return
+        }
+
+        currentEpcLengths.add(length)
+        currentEpcLengths.sort()
+        binding.editEpcLength.text?.clear()
+        renderEpcLengthChips()
+        saveAppSettings()
+    }
+
+    private fun renderEpcLengthChips() {
+        binding.chipGroupEpcLengths.removeAllViews()
+        currentEpcLengths.forEach { length ->
+            val chip = Chip(requireContext()).apply {
+                text = length.toString()
+                isCloseIconVisible = true
+                setOnCloseIconClickListener {
+                    currentEpcLengths.remove(length)
+                    renderEpcLengthChips()
+                    saveAppSettings()
+                }
+            }
+            binding.chipGroupEpcLengths.addView(chip)
+        }
+    }
+
     private fun saveAppSettings() {
         val rssi = binding.sliderRssi.value.toInt()
         val buzzer = binding.switchBuzzer.isChecked
@@ -145,6 +195,8 @@ class ConfigFragment : Fragment() {
             current.copy(
                 buzzerEnabled = buzzer,
                 rssiFilter = rssi,
+                epcLen = null,
+                epcLengths = currentEpcLengths.toList(),
                 prefixes = currentPrefixes.toList()
             )
         )
@@ -189,6 +241,15 @@ class ConfigFragment : Fragment() {
         binding.sliderRssi.value = rssiValue
         binding.textRssiValue.text = "${rssiValue.toInt()} dBm"
         binding.switchBuzzer.isChecked = settings.buzzerEnabled
+
+        val storedEpcLengths = settings.epcLengths
+            ?: settings.epcLen?.let(::listOf)
+            ?: emptyList()
+        if (currentEpcLengths != storedEpcLengths) {
+            currentEpcLengths.clear()
+            currentEpcLengths.addAll(storedEpcLengths.distinct().sorted())
+            renderEpcLengthChips()
+        }
 
         if (currentPrefixes != settings.prefixes) {
             currentPrefixes.clear()

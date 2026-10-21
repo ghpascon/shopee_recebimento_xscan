@@ -5,12 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.smartx.shopeerecebimento.R
 import com.smartx.shopeerecebimento.core.reader.RfidTag
@@ -18,6 +22,7 @@ import com.smartx.shopeerecebimento.core.reader.ReaderConnectionState
 import com.smartx.shopeerecebimento.core.webhook.WebhookService
 import com.smartx.shopeerecebimento.databinding.FragmentHomeBinding
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class HomeFragment : Fragment() {
 
@@ -25,11 +30,11 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: MainViewModel by activityViewModels()
     private lateinit var registeredAdapter: HomeEpcAdapter
-    private lateinit var unregisteredAdapter: HomeUnregisteredAdapter
     private var currentTagCount: Int = 0
     private var isCurrentlyInventorying: Boolean = false
     private var allTagsWithDescription: Boolean = false
     private var hasRegisteredTags: Boolean = false
+    private var lastUnregisteredEpcs: List<String> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,21 +68,23 @@ class HomeFragment : Fragment() {
 
     private fun setupRecyclerView() {
         registeredAdapter = HomeEpcAdapter()
-        unregisteredAdapter = HomeUnregisteredAdapter()
 
         binding.recyclerEpcs.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerEpcs.adapter = registeredAdapter
         binding.recyclerEpcs.isNestedScrollingEnabled = false
-
-        binding.recyclerUnregisteredTags.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerUnregisteredTags.adapter = unregisteredAdapter
-        binding.recyclerUnregisteredTags.isNestedScrollingEnabled = false
     }
 
     private fun setupActions() {
         binding.btnConfirm.isEnabled = false
         binding.btnConfirm.setOnClickListener {
             viewModel.confirmMoveLocation()
+        }
+        binding.btnAddManualEpc.setOnClickListener {
+            showManualEpcDialog()
+        }
+
+        binding.textUnregisteredInfo.setOnClickListener {
+            showUnregisteredTagsDialog()
         }
     }
 
@@ -88,14 +95,14 @@ class HomeFragment : Fragment() {
                     viewModel.tags.collect { tags ->
                         currentTagCount = tags.size
                         allTagsWithDescription = tags.isNotEmpty() && tags.all { it.description.isNotBlank() }
-                        binding.textTotalLido.text = currentTagCount.toString()
 
                         val unregisteredTags = tags.filter { it.descriptionLookupError }
-                        val tagsForMainList = tags.filterNot { it.descriptionLookupError }
-                        hasRegisteredTags = tagsForMainList.any { it.objectIdCode.isNotBlank() }
+                        val registeredTags = tags.filterNot { it.descriptionLookupError }
+                        hasRegisteredTags = registeredTags.any { it.objectIdCode.isNotBlank() }
 
-                        updateUnregisteredTagsSection(unregisteredTags)
-                        registeredAdapter.submitList(tagsForMainList.toList())
+                        updateCounters(registeredTags.size, unregisteredTags.size)
+                        lastUnregisteredEpcs = unregisteredTags.map { it.epc }
+                        registeredAdapter.submitList(groupTagsByDescription(registeredTags))
                         updateConfirmButtonState()
                     }
                 }
@@ -126,17 +133,117 @@ class HomeFragment : Fragment() {
                 hasRegisteredTags
     }
 
-    private fun updateUnregisteredTagsSection(tags: List<RfidTag>) {
-        if (tags.isEmpty()) {
-            binding.cardUnregisteredTags.visibility = View.GONE
-            unregisteredAdapter.submitList(emptyList())
+    private fun updateCounters(registeredCount: Int, unregisteredCount: Int) {
+        binding.textRegisteredCount.text = registeredCount.toString()
+        binding.textUnregisteredCount.text = unregisteredCount.toString()
+        binding.textUnregisteredInfo.visibility = if (unregisteredCount > 0) View.VISIBLE else View.INVISIBLE
+    }
+
+    private fun groupTagsByDescription(tags: List<RfidTag>): List<HomeDescriptionGroup> {
+        return tags
+            .groupBy { tag ->
+                tag.description.trim().ifBlank {
+                    getString(R.string.tag_description_loading)
+                }
+            }
+            .map { (description, groupedTags) ->
+                HomeDescriptionGroup(
+                    description = description,
+                    totalTags = groupedTags.size
+                )
+            }
+            .sortedWith(
+                compareByDescending<HomeDescriptionGroup> { it.totalTags }
+                    .thenBy { it.description.lowercase(Locale.ROOT) }
+            )
+    }
+
+    private fun showUnregisteredTagsDialog() {
+        if (lastUnregisteredEpcs.isEmpty()) {
+            showSnackbar(getString(R.string.home_unregistered_empty))
             return
         }
 
-        binding.cardUnregisteredTags.visibility = View.VISIBLE
-        binding.textUnregisteredTitle.text =
-            getString(R.string.home_unregistered_title_with_count, tags.size)
-        unregisteredAdapter.submitList(tags.map { it.epc })
+        val listText = lastUnregisteredEpcs
+            .sorted()
+            .joinToString(separator = "\n")
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.home_unregistered_title_with_count, lastUnregisteredEpcs.size))
+            .setMessage(listText)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
+    private fun showManualEpcDialog() {
+        val content = layoutInflater.inflate(R.layout.dialog_manual_epc_capture, null, false)
+        val captureText = content.findViewById<android.widget.TextView>(R.id.textManualEpcCapture)
+        val wedgeReceiver = content.findViewById<EditText>(R.id.editManualEpcWedgeReceiver)
+        val statusText = content.findViewById<android.widget.TextView>(R.id.textManualEpcStatus)
+
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.home_manual_epc_title)
+            .setView(content)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.home_manual_epc_add, null)
+            .create()
+
+        fun refreshCapture() {
+            captureText.text = wedgeReceiver.text?.toString()?.trim()?.ifBlank {
+                getString(R.string.home_manual_epc_waiting)
+            } ?: getString(R.string.home_manual_epc_waiting)
+            statusText.visibility = View.GONE
+        }
+
+        fun commitCapturedEpc(): Boolean {
+            when (viewModel.addManualEpc(wedgeReceiver.text?.toString().orEmpty())) {
+                ManualEpcResult.ADDED -> {
+                    dialog.dismiss()
+                    showSnackbar(getString(R.string.home_manual_epc_added))
+                }
+                ManualEpcResult.EMPTY -> {
+                    statusText.text = getString(R.string.home_manual_epc_required)
+                    statusText.visibility = View.VISIBLE
+                    wedgeReceiver.requestFocus()
+                }
+                ManualEpcResult.INVALID_LENGTH -> {
+                    statusText.text = getString(R.string.home_manual_epc_invalid_length)
+                    statusText.visibility = View.VISIBLE
+                    wedgeReceiver.requestFocus()
+                }
+                ManualEpcResult.PREFIX_MISMATCH -> {
+                    statusText.text = getString(R.string.home_manual_epc_prefix_mismatch)
+                    statusText.visibility = View.VISIBLE
+                    wedgeReceiver.requestFocus()
+                }
+            }
+            return true
+        }
+
+        wedgeReceiver.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = refreshCapture()
+            override fun afterTextChanged(s: android.text.Editable?) = Unit
+        })
+        wedgeReceiver.setOnEditorActionListener { _, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
+            ) {
+                commitCapturedEpc()
+            } else {
+                false
+            }
+        }
+
+        dialog.setOnShowListener {
+            dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+            wedgeReceiver.showSoftInputOnFocus = false
+            wedgeReceiver.requestFocus()
+
+            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener { commitCapturedEpc() }
+        }
+        dialog.show()
     }
 
     private fun updateHomeStatus(state: MainUiState) {
@@ -157,6 +264,10 @@ class HomeFragment : Fragment() {
 
         binding.textStatusHome.text = statusText
         binding.statusDot.setBackgroundResource(statusDrawable)
+    }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {

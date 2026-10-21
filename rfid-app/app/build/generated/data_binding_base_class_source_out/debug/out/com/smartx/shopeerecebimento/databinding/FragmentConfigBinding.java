@@ -29,10 +29,16 @@ public final class FragmentConfigBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
+  public final MaterialButton btnAddEpcLength;
+
+  @NonNull
   public final MaterialButton btnAddPrefix;
 
   @NonNull
   public final MaterialButton btnApplyConfig;
+
+  @NonNull
+  public final MaterialButton btnClearEpcLengths;
 
   @NonNull
   public final MaterialButton btnClearPrefixes;
@@ -50,13 +56,22 @@ public final class FragmentConfigBinding implements ViewBinding {
   public final MaterialCardView cardReaderConfig;
 
   @NonNull
+  public final ChipGroup chipGroupEpcLengths;
+
+  @NonNull
   public final ChipGroup chipGroupPrefixes;
+
+  @NonNull
+  public final TextInputEditText editEpcLength;
 
   @NonNull
   public final TextInputEditText editPrefix;
 
   @NonNull
   public final TextView labelSession;
+
+  @NonNull
+  public final TextInputLayout layoutEpcLength;
 
   @NonNull
   public final TextInputLayout layoutPrefix;
@@ -82,26 +97,34 @@ public final class FragmentConfigBinding implements ViewBinding {
   @NonNull
   public final TextView textRssiValue;
 
-  private FragmentConfigBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnAddPrefix,
-      @NonNull MaterialButton btnApplyConfig, @NonNull MaterialButton btnClearPrefixes,
-      @NonNull MaterialButton btnReloadConfig, @NonNull MaterialButton btnSaveAppSettings,
-      @NonNull MaterialCardView cardAppConfig, @NonNull MaterialCardView cardReaderConfig,
-      @NonNull ChipGroup chipGroupPrefixes, @NonNull TextInputEditText editPrefix,
-      @NonNull TextView labelSession, @NonNull TextInputLayout layoutPrefix,
+  private FragmentConfigBinding(@NonNull ScrollView rootView,
+      @NonNull MaterialButton btnAddEpcLength, @NonNull MaterialButton btnAddPrefix,
+      @NonNull MaterialButton btnApplyConfig, @NonNull MaterialButton btnClearEpcLengths,
+      @NonNull MaterialButton btnClearPrefixes, @NonNull MaterialButton btnReloadConfig,
+      @NonNull MaterialButton btnSaveAppSettings, @NonNull MaterialCardView cardAppConfig,
+      @NonNull MaterialCardView cardReaderConfig, @NonNull ChipGroup chipGroupEpcLengths,
+      @NonNull ChipGroup chipGroupPrefixes, @NonNull TextInputEditText editEpcLength,
+      @NonNull TextInputEditText editPrefix, @NonNull TextView labelSession,
+      @NonNull TextInputLayout layoutEpcLength, @NonNull TextInputLayout layoutPrefix,
       @NonNull ProgressBar progressSaving, @NonNull Slider sliderPower, @NonNull Slider sliderRssi,
       @NonNull Spinner spinnerSession, @NonNull SwitchMaterial switchBuzzer,
       @NonNull TextView textPowerValue, @NonNull TextView textRssiValue) {
     this.rootView = rootView;
+    this.btnAddEpcLength = btnAddEpcLength;
     this.btnAddPrefix = btnAddPrefix;
     this.btnApplyConfig = btnApplyConfig;
+    this.btnClearEpcLengths = btnClearEpcLengths;
     this.btnClearPrefixes = btnClearPrefixes;
     this.btnReloadConfig = btnReloadConfig;
     this.btnSaveAppSettings = btnSaveAppSettings;
     this.cardAppConfig = cardAppConfig;
     this.cardReaderConfig = cardReaderConfig;
+    this.chipGroupEpcLengths = chipGroupEpcLengths;
     this.chipGroupPrefixes = chipGroupPrefixes;
+    this.editEpcLength = editEpcLength;
     this.editPrefix = editPrefix;
     this.labelSession = labelSession;
+    this.layoutEpcLength = layoutEpcLength;
     this.layoutPrefix = layoutPrefix;
     this.progressSaving = progressSaving;
     this.sliderPower = sliderPower;
@@ -139,6 +162,12 @@ public final class FragmentConfigBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btnAddEpcLength;
+      MaterialButton btnAddEpcLength = ViewBindings.findChildViewById(rootView, id);
+      if (btnAddEpcLength == null) {
+        break missingId;
+      }
+
       id = R.id.btnAddPrefix;
       MaterialButton btnAddPrefix = ViewBindings.findChildViewById(rootView, id);
       if (btnAddPrefix == null) {
@@ -148,6 +177,12 @@ public final class FragmentConfigBinding implements ViewBinding {
       id = R.id.btnApplyConfig;
       MaterialButton btnApplyConfig = ViewBindings.findChildViewById(rootView, id);
       if (btnApplyConfig == null) {
+        break missingId;
+      }
+
+      id = R.id.btnClearEpcLengths;
+      MaterialButton btnClearEpcLengths = ViewBindings.findChildViewById(rootView, id);
+      if (btnClearEpcLengths == null) {
         break missingId;
       }
 
@@ -181,9 +216,21 @@ public final class FragmentConfigBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.chipGroupEpcLengths;
+      ChipGroup chipGroupEpcLengths = ViewBindings.findChildViewById(rootView, id);
+      if (chipGroupEpcLengths == null) {
+        break missingId;
+      }
+
       id = R.id.chipGroupPrefixes;
       ChipGroup chipGroupPrefixes = ViewBindings.findChildViewById(rootView, id);
       if (chipGroupPrefixes == null) {
+        break missingId;
+      }
+
+      id = R.id.editEpcLength;
+      TextInputEditText editEpcLength = ViewBindings.findChildViewById(rootView, id);
+      if (editEpcLength == null) {
         break missingId;
       }
 
@@ -196,6 +243,12 @@ public final class FragmentConfigBinding implements ViewBinding {
       id = R.id.labelSession;
       TextView labelSession = ViewBindings.findChildViewById(rootView, id);
       if (labelSession == null) {
+        break missingId;
+      }
+
+      id = R.id.layoutEpcLength;
+      TextInputLayout layoutEpcLength = ViewBindings.findChildViewById(rootView, id);
+      if (layoutEpcLength == null) {
         break missingId;
       }
 
@@ -247,9 +300,10 @@ public final class FragmentConfigBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentConfigBinding((ScrollView) rootView, btnAddPrefix, btnApplyConfig,
-          btnClearPrefixes, btnReloadConfig, btnSaveAppSettings, cardAppConfig, cardReaderConfig,
-          chipGroupPrefixes, editPrefix, labelSession, layoutPrefix, progressSaving, sliderPower,
+      return new FragmentConfigBinding((ScrollView) rootView, btnAddEpcLength, btnAddPrefix,
+          btnApplyConfig, btnClearEpcLengths, btnClearPrefixes, btnReloadConfig, btnSaveAppSettings,
+          cardAppConfig, cardReaderConfig, chipGroupEpcLengths, chipGroupPrefixes, editEpcLength,
+          editPrefix, labelSession, layoutEpcLength, layoutPrefix, progressSaving, sliderPower,
           sliderRssi, spinnerSession, switchBuzzer, textPowerValue, textRssiValue);
     }
     String missingId = rootView.getResources().getResourceName(id);

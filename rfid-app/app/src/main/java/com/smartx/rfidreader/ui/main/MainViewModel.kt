@@ -16,6 +16,7 @@ import com.smartx.shopeerecebimento.core.reader.RfidTag
 import com.smartx.shopeerecebimento.core.registry.ReaderRegistry
 import com.smartx.shopeerecebimento.core.settings.AppSettings
 import com.smartx.shopeerecebimento.core.settings.AppSettingsRepository
+import com.smartx.shopeerecebimento.core.xtrack.XTrackDevice
 import com.smartx.shopeerecebimento.core.xtrack.XTrackLoginResult
 import com.smartx.shopeerecebimento.core.xtrack.xtrack_manager
 import com.smartx.shopeerecebimento.readers.cfh301.CfH301Reader
@@ -40,6 +41,7 @@ data class MainUiState(
     val loginErrorMessage: String? = null,
     val isCheckingXtrackCommunication: Boolean = false,
     val xtrackCommunicationWarning: String? = null,
+    val xtrackDeviceConfigWarning: String? = null,
     val isAuthenticated: Boolean = false,
     val appSettings: AppSettings = AppSettings(),
     val errorMessage: String? = null
@@ -60,6 +62,13 @@ sealed interface MoveLocationUiResult {
         val message: String,
         val canRetry: Boolean = true
     ) : MoveLocationUiResult
+}
+
+enum class ManualEpcResult {
+    ADDED,
+    EMPTY,
+    INVALID_LENGTH,
+    PREFIX_MISMATCH
 }
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
@@ -129,6 +138,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private var hasDescriptionLookupConnectionFailure = false
     private var lastDescriptionResolveAtMs = 0L
     private var lastMoveLocationRequest: MoveLocationRequest? = null
+    private var lastDeviceConfigLoadKey: String? = null
 
     companion object {
         private const val DESCRIPTION_RESOLVE_INTERVAL_MS = 3_000L
@@ -158,6 +168,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             settingsRepo.flow.collect { settings ->
                 _uiState.update { it.copy(appSettings = settings) }
+                val url = settings.xtrackUrl.trim()
+                val uid = xtrack_manager.normalizeUid(settings.selectedDeviceUid)
+                val key = "$url|$uid"
+                if (url.isNotBlank() && key != lastDeviceConfigLoadKey) {
+                    lastDeviceConfigLoadKey = key
+                    loadDeviceConfigOnStartup(settings)
+                }
             }
         }
         viewModelScope.launch {
@@ -354,43 +371,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             r.tagFlow.collect { tag ->
                 val settings = _uiState.value.appSettings
-
-                // Filtro de prefixo
-                val prefixes = settings.prefixes
-                if (prefixes.isNotEmpty() && prefixes.none { tag.epc.startsWith(it, ignoreCase = true) }) {
-                    return@collect
-                }
+                if (!passesEpcFilters(tag.epc, settings)) return@collect
 
                 // Filtro RSSI
                 val rssiVal = tag.rssi.toDoubleOrNull()
                 if (rssiVal != null && rssiVal < settings.rssiFilter) return@collect
 
-                val existing = _tagMap[tag.epc]
-                val isNew = existing == null
-                if (isNew) {
-                    _tagMap[tag.epc] = tag
-                } else {
-                    _tagMap[tag.epc] = existing!!.copy(
-                        readCount = existing.readCount + 1,
-                        rssi = tag.rssi,
-                        timestamp = tag.timestamp
-                    )
-                }
-
-                // Marca dirty — a UI será atualizada pelo ticker de 200 ms
-                _tagsDirty = true
-
-                // Emite o evento individual para o radar (SharedFlow — safe para múltiplos collectors)
-                _tagEventFlow.tryEmit(tag)
-
-                // Buzzer para qualquer tag lida, com cooldown de 50 ms
-                if (settings.buzzerEnabled) {
-                    val now = System.currentTimeMillis()
-                    if (now - _lastBuzzerMs >= 100L) {
-                        _lastBuzzerMs = now
-                        _buzzerEvent.tryEmit(Unit)
-                    }
-                }
+                ingestAcceptedTag(tag, settings)
             }
         }
         // Ticker: atualiza a lista na UI no máximo a cada 200 ms
@@ -403,6 +390,135 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 }
                 maybeResolveTagDescriptions()
             }
+        }
+    }
+
+    fun addManualEpc(rawEpc: String): ManualEpcResult {
+        val epc = rawEpc.trim().uppercase(Locale.ROOT)
+        if (epc.isBlank()) return ManualEpcResult.EMPTY
+
+        val settings = _uiState.value.appSettings
+        if (!passesEpcFilters(epc, settings)) {
+            return if (hasEpcLengthMismatch(epc, settings)) {
+                ManualEpcResult.INVALID_LENGTH
+            } else {
+                ManualEpcResult.PREFIX_MISMATCH
+            }
+        }
+
+        val tag = RfidTag(epc = epc)
+        ingestAcceptedTag(tag, settings)
+        _tags.value = _tagMap.values.toList()
+        _tagsDirty = false
+        maybeResolveTagDescriptions()
+        return ManualEpcResult.ADDED
+    }
+
+    private fun passesEpcFilters(epc: String, settings: AppSettings): Boolean {
+        val normalizedEpc = epc.trim()
+        val epcLengths = settings.epcLengths
+        if (epcLengths != null) {
+            if (epcLengths.isNotEmpty() && normalizedEpc.length !in epcLengths) return false
+        } else if (settings.epcLen != null && normalizedEpc.length != settings.epcLen) {
+            return false
+        }
+
+        val prefixes = settings.prefixes
+        return prefixes.isEmpty() || prefixes.any {
+            normalizedEpc.startsWith(it, ignoreCase = true)
+        }
+    }
+
+    private fun hasEpcLengthMismatch(epc: String, settings: AppSettings): Boolean {
+        val length = epc.trim().length
+        val epcLengths = settings.epcLengths
+        return if (epcLengths != null) {
+            epcLengths.isNotEmpty() && length !in epcLengths
+        } else {
+            settings.epcLen != null && length != settings.epcLen
+        }
+    }
+
+    private fun ingestAcceptedTag(tag: RfidTag, settings: AppSettings) {
+        val existing = _tagMap[tag.epc]
+        if (existing == null) {
+            _tagMap[tag.epc] = tag
+        } else {
+            _tagMap[tag.epc] = existing.copy(
+                readCount = existing.readCount + 1,
+                rssi = tag.rssi,
+                timestamp = tag.timestamp
+            )
+        }
+
+        _tagsDirty = true
+        _tagEventFlow.tryEmit(tag)
+
+        if (settings.buzzerEnabled) {
+            val now = System.currentTimeMillis()
+            if (now - _lastBuzzerMs >= 100L) {
+                _lastBuzzerMs = now
+                _buzzerEvent.tryEmit(Unit)
+            }
+        }
+    }
+
+    suspend fun fetchXtrackDevices(): Result<List<XTrackDevice>> =
+        xtrack_manager.fetchDevices(_uiState.value.appSettings.xtrackUrl)
+
+    suspend fun selectXtrackDevice(uid: String): Result<XTrackDevice> {
+        val settings = _uiState.value.appSettings
+        val devices = xtrack_manager.fetchDevices(settings.xtrackUrl).getOrElse {
+            return Result.failure(it)
+        }
+        val device = xtrack_manager.findSelectedDevice(devices, uid)
+            ?: return Result.failure(IllegalStateException("UID não encontrado no GetDevice: ${uid.trim()}"))
+
+        lastDeviceConfigLoadKey = "${settings.xtrackUrl.trim()}|${xtrack_manager.normalizeUid(device.uid)}"
+        persistAndApplyDevice(device, settings)
+        return Result.success(device)
+    }
+
+    private fun loadDeviceConfigOnStartup(settings: AppSettings) {
+        viewModelScope.launch {
+            val devices = xtrack_manager.fetchDevices(settings.xtrackUrl).getOrElse { err ->
+                Log.w(TAG, "Não foi possível carregar devices XTrack: ${err.message}")
+                return@launch
+            }
+            val device = xtrack_manager.findSelectedDevice(devices, settings.selectedDeviceUid)
+            if (device == null) {
+                Log.w(TAG, "Device XTrack não encontrado para UID '${settings.selectedDeviceUid}'")
+                return@launch
+            }
+            lastDeviceConfigLoadKey = "${settings.xtrackUrl.trim()}|${xtrack_manager.normalizeUid(device.uid)}"
+            persistAndApplyDevice(device, _uiState.value.appSettings)
+        }
+    }
+
+    private suspend fun persistAndApplyDevice(device: XTrackDevice, current: AppSettings) {
+        val configPayload = device.name.ifBlank { device.uid }
+        val parsedConfig = xtrack_manager.parseDeviceConfig(configPayload)
+        val updated = current.copy(
+            selectedDeviceUid = device.uid.trim(),
+            selectedDeviceId = device.id.trim(),
+            selectedDeviceName = device.name.trim(),
+            prefixes = parsedConfig.prefixes ?: current.prefixes,
+            epcLengths = parsedConfig.epcLengths ?: current.epcLengths,
+            epcLen = when {
+                parsedConfig.epcLengths == null -> current.epcLen
+                parsedConfig.epcLengths.isEmpty() -> null
+                parsedConfig.epcLengths.size == 1 -> parsedConfig.epcLengths.single()
+                else -> null
+            }
+        )
+        settingsRepo.save(updated)
+        val warning = parsedConfig.errors.takeIf { it.isNotEmpty() }?.joinToString()
+        _uiState.update {
+            it.copy(appSettings = updated, xtrackDeviceConfigWarning = warning)
+        }
+
+        if (warning != null) {
+            Log.w(TAG, "Configuração NAME inválida para UID ${device.uid}: $warning")
         }
     }
 

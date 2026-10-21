@@ -1,6 +1,8 @@
 package com.smartx.shopeerecebimento.core.xtrack
 
 import android.util.Log
+import org.json.JSONArray
+import org.json.JSONObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,6 +37,20 @@ data class XTrackLocation(
     val name: String
 )
 
+data class XTrackDevice(
+    val id: String,
+    val active: String,
+    val uid: String,
+    val name: String
+)
+
+
+data class XTrackDeviceConfig(
+    val prefixes: List<String>? = null,
+    val epcLengths: List<Int>? = null,
+    val errors: List<String> = emptyList()
+)
+
 data class XTrackObjectInfo(
     val description: String,
     val objectIdCode: String
@@ -54,6 +70,7 @@ object xtrack_manager {
     private const val GET_USER_PAYLOAD = "<msg><command>GetUser</command><terminal>ERP</terminal></msg>"
 
     private const val GET_LOCATION_PAYLOAD = "<msg><command>GetLocation</command><terminal>ERP</terminal></msg>"
+    private const val GET_DEVICE_PAYLOAD = "<msg><command>GetDevice</command><terminal>ERP</terminal></msg>"
 
     private const val GET_OBJECT_COMMAND = "GetObject"
     private const val MOVE_LOCATION_COMMAND = "MoveLocation"
@@ -170,6 +187,100 @@ object xtrack_manager {
         }.onFailure { err ->
             Log.e(TAG, "GetLocation failed: ${err.message}", err)
         }
+    }
+
+    suspend fun fetchDevices(xtrackUrl: String): Result<List<XTrackDevice>> = withContext(Dispatchers.IO) {
+        val url = xtrackUrl.trim()
+        if (url.isBlank()) {
+            return@withContext Result.failure(IllegalArgumentException("xtrack_url não configurada"))
+        }
+
+        runCatching {
+            val response = postXml(url, GET_DEVICE_PAYLOAD)
+            if (response.isBlank()) throw IllegalStateException("XTrack respondeu vazio para GetDevice")
+            val devices = parseDevicesResponse(response)
+            if (devices.isEmpty()) {
+                throw IllegalStateException("GetDevice não retornou devices reconhecíveis")
+            }
+            devices
+        }.onFailure { err ->
+            Log.e(TAG, "GetDevice failed: ${err.message}", err)
+        }
+    }
+
+    internal fun parseDevicesResponse(body: String): List<XTrackDevice> {
+        val trimmed = body.trim()
+        if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+            runCatching { parseDevicesJson(trimmed) }.getOrNull()?.let { return it }
+        }
+        return parseDevicesXml(body)
+    }
+
+    internal fun parseDevicesJson(body: String): List<XTrackDevice> {
+        val root = if (body.trimStart().startsWith("[")) JSONArray(body) else JSONObject(body)
+        val data = when (root) {
+            is JSONArray -> root
+            is JSONObject -> root.findIgnoreCase("data")
+                ?: throw IllegalArgumentException("Resposta JSON GetDevice sem campo data")
+            else -> throw IllegalArgumentException("Resposta JSON GetDevice inválida")
+        }
+
+        val items = when (data) {
+            is JSONArray -> (0 until data.length()).mapNotNull { data.optJSONObject(it) }
+            is JSONObject -> listOf(data)
+            else -> throw IllegalArgumentException("Campo data do GetDevice não é lista nem objeto")
+        }
+        return items.mapNotNull { item ->
+            val id = item.getStringIgnoreCase("ID")
+            val active = item.getStringIgnoreCase("ACTIVE")
+            val uid = item.getStringIgnoreCase("UID")
+            val name = item.getStringIgnoreCase("NAME")
+            if (id.isBlank() && uid.isBlank() && name.isBlank()) null
+            else XTrackDevice(id = id, active = active, uid = uid, name = name)
+        }
+    }
+
+    internal fun parseDevicesXml(xml: String): List<XTrackDevice> = parseDataRows(xml).mapNotNull { row ->
+        val id = row.first("ID").trim()
+        val active = row.first("ACTIVE").trim()
+        val uid = row.first("UID").trim()
+        val name = row.first("NAME").trim()
+        if (id.isBlank() && uid.isBlank() && name.isBlank()) null
+        else XTrackDevice(id = id, active = active, uid = uid, name = name)
+    }
+
+    internal fun parseDeviceConfig(rawName: String): XTrackDeviceConfig {
+        val source = rawName.trim()
+        if (source.isBlank()) return XTrackDeviceConfig()
+
+        val errors = mutableListOf<String>()
+        val prefixes = parseConfigList(source, "PREFIX", errors)?.map { it.uppercase(Locale.ROOT) }
+        val epcValues = parseConfigList(source, "EPC_LEN", errors)
+        val epcLengths = epcValues?.mapNotNull { value ->
+            value.toIntOrNull()?.takeIf { it > 0 } ?: run {
+                errors += "EPC_LEN inválido: $value"
+                null
+            }
+        }?.distinct()
+        val normalizedEpcLengths = when {
+            epcValues == null -> null
+            epcValues.isEmpty() -> emptyList()
+            epcLengths.isNullOrEmpty() -> null
+            else -> epcLengths
+        }
+
+        return XTrackDeviceConfig(
+            prefixes = prefixes?.distinct(),
+            epcLengths = normalizedEpcLengths,
+            errors = errors.distinct()
+        )
+    }
+
+    internal fun normalizeUid(value: String): String = value.trim().lowercase(Locale.ROOT)
+
+    internal fun findSelectedDevice(devices: List<XTrackDevice>, selectedUid: String): XTrackDevice? {
+        val uid = normalizeUid(selectedUid).ifBlank { normalizeUid("COLETOR_ALMOX") }
+        return devices.firstOrNull { normalizeUid(it.uid) == uid }
     }
 
     suspend fun fetchObjectInfos(
@@ -380,6 +491,41 @@ object xtrack_manager {
             }
         }
         return result
+    }
+
+    private fun parseConfigList(
+        source: String,
+        key: String,
+        errors: MutableList<String>
+    ): List<String>? {
+        val escapedKey = Regex.escape(key)
+        val keyRegex = Regex("""[\"']?$escapedKey[\"']?\s*[:=]""", RegexOption.IGNORE_CASE)
+        val keyMatch = keyRegex.find(source) ?: return null
+        val listRegex = Regex(
+            """[\"']?$escapedKey[\"']?\s*[:=]\s*\[([^\]]*)\]""",
+            RegexOption.IGNORE_CASE
+        )
+        val match = listRegex.find(source, keyMatch.range.first)
+        if (match == null) {
+            errors += "$key deve conter uma lista entre colchetes"
+            return null
+        }
+
+        return match.groupValues[1]
+            .split(',')
+            .map { it.trim().trim('"', '\'') }
+            .filter { it.isNotBlank() }
+    }
+
+    private fun JSONObject.findIgnoreCase(name: String): Any? {
+        val key = keys().asSequence().firstOrNull { it.equals(name, ignoreCase = true) } ?: return null
+        return opt(key)
+    }
+
+    private fun JSONObject.getStringIgnoreCase(name: String): String {
+        val value = findIgnoreCase(name) ?: return ""
+        if (value == JSONObject.NULL) return ""
+        return value.toString().trim()
     }
 
     private fun xmlUnescape(value: String): String {

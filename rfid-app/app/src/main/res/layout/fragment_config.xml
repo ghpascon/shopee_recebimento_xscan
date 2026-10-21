@@ -213,6 +213,70 @@
                         android:checked="true" />
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/label_epc_len"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/helper_epc_len"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupEpcLengths"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layoutEpcLength"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:hint="@string/hint_epc_length">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editEpcLength"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionDone"
+                            android:inputType="number"
+                            android:maxLength="3"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAddEpcLength"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="4dp"
+                        android:text="@string/btn_add_prefix" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnClearEpcLengths"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/btn_clear_epc_lengths" />
+
                 <!-- Separador -->
                 <View
                     android:layout_width="match_parent"

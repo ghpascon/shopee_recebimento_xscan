@@ -12,7 +12,7 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@id/btnConfirm"
+        app:layout_constraintBottom_toTopOf="@id/btnAddManualEpc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,10 +22,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardTotalLido"
+        <LinearLayout
+            android:id="@+id/summaryRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardRegisteredSummary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             app:cardBackgroundColor="?attr/colorPrimaryContainer"
             app:cardCornerRadius="16dp">
 
@@ -38,12 +45,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/home_total_lido_title"
+                    android:text="@string/home_registered_title"
                     android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                     android:textColor="?attr/colorOnPrimaryContainer" />
 
                 <TextView
-                    android:id="@+id/textTotalLido"
+                    android:id="@+id/textRegisteredCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
@@ -54,6 +61,66 @@
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardUnregisteredSummary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="?attr/colorErrorContainer"
+            app:cardCornerRadius="16dp"
+            app:strokeColor="?attr/colorError"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/home_unregistered_title_short"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    android:textColor="?attr/colorError" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textUnregisteredCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+                        android:textColor="?attr/colorError"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textUnregisteredInfo"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_spinner"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="i"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                        android:textColor="?attr/colorError"
+                        android:visibility="invisible" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/statusRow"
@@ -80,43 +147,6 @@
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardUnregisteredTags"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:visibility="gone"
-            app:cardBackgroundColor="?attr/colorErrorContainer"
-            app:cardCornerRadius="16dp"
-            app:strokeColor="?attr/colorError"
-            app:strokeWidth="1dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="12dp">
-
-                <TextView
-                    android:id="@+id/textUnregisteredTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/home_unregistered_title"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
-                    android:textColor="?attr/colorError" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerUnregisteredTags"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:clipToPadding="false"
-                    android:nestedScrollingEnabled="false"
-                    android:paddingBottom="4dp" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -132,7 +162,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/home_tags_section_title"
+                    android:text="@string/home_tags_grouped_title"
                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     android:textColor="?attr/colorOnSurface" />
 
@@ -150,6 +180,17 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAddManualEpc"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="@string/home_add_manual_epc"
+        app:layout_constraintBottom_toTopOf="@id/btnConfirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnConfirm"

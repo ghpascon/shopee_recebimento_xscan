@@ -12,8 +12,8 @@ android {
         applicationId "com.smartx.shopeerecebimento"
         minSdk 29
         targetSdk 34
-        versionCode 53
-        versionName "7.0.1"
+        versionCode 54
+        versionName "7.1.0"
     }
 
     buildTypes {
@@ -107,6 +107,7 @@ dependencies {
 
     // --- Unit tests ---
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20240303'
 }
 
 // -----------------------------------------------------------------------------

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.smartx.shopeerecebimento.core.db.AppDatabase
 import com.smartx.shopeerecebimento.core.events.EventRepository
 import com.smartx.shopeerecebimento.core.settings.AppSettingsRepository
+import com.smartx.shopeerecebimento.readers.xr2.XR2Reader
 
 class RfidApplication : Application() {
 
@@ -15,5 +16,6 @@ class RfidApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        XR2Reader.disableBarcodeOnRfidTrigger()
     }
 }

@@ -4,7 +4,6 @@ package com.smartx.shopeerecebimento.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -25,25 +24,31 @@ public final class FragmentXtrackConfigBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
-  public final AutoCompleteTextView autoLocation;
-
-  @NonNull
   public final MaterialButton btnReloadLocations;
 
   @NonNull
   public final MaterialButton btnSaveXtrack;
 
   @NonNull
-  public final TextInputEditText editXtrackUrl;
+  public final MaterialButton btnSelectDevice;
 
   @NonNull
-  public final TextInputLayout layoutLocation;
+  public final MaterialButton btnSelectLocation;
+
+  @NonNull
+  public final TextInputEditText editXtrackUrl;
 
   @NonNull
   public final TextInputLayout layoutXtrackUrl;
 
   @NonNull
+  public final ProgressBar progressDevices;
+
+  @NonNull
   public final ProgressBar progressLocations;
+
+  @NonNull
+  public final TextView textDeviceStatus;
 
   @NonNull
   public final TextView textXtrackDetails;
@@ -52,19 +57,22 @@ public final class FragmentXtrackConfigBinding implements ViewBinding {
   public final TextView textXtrackDetailsTitle;
 
   private FragmentXtrackConfigBinding(@NonNull ScrollView rootView,
-      @NonNull AutoCompleteTextView autoLocation, @NonNull MaterialButton btnReloadLocations,
-      @NonNull MaterialButton btnSaveXtrack, @NonNull TextInputEditText editXtrackUrl,
-      @NonNull TextInputLayout layoutLocation, @NonNull TextInputLayout layoutXtrackUrl,
-      @NonNull ProgressBar progressLocations, @NonNull TextView textXtrackDetails,
+      @NonNull MaterialButton btnReloadLocations, @NonNull MaterialButton btnSaveXtrack,
+      @NonNull MaterialButton btnSelectDevice, @NonNull MaterialButton btnSelectLocation,
+      @NonNull TextInputEditText editXtrackUrl, @NonNull TextInputLayout layoutXtrackUrl,
+      @NonNull ProgressBar progressDevices, @NonNull ProgressBar progressLocations,
+      @NonNull TextView textDeviceStatus, @NonNull TextView textXtrackDetails,
       @NonNull TextView textXtrackDetailsTitle) {
     this.rootView = rootView;
-    this.autoLocation = autoLocation;
     this.btnReloadLocations = btnReloadLocations;
     this.btnSaveXtrack = btnSaveXtrack;
+    this.btnSelectDevice = btnSelectDevice;
+    this.btnSelectLocation = btnSelectLocation;
     this.editXtrackUrl = editXtrackUrl;
-    this.layoutLocation = layoutLocation;
     this.layoutXtrackUrl = layoutXtrackUrl;
+    this.progressDevices = progressDevices;
     this.progressLocations = progressLocations;
+    this.textDeviceStatus = textDeviceStatus;
     this.textXtrackDetails = textXtrackDetails;
     this.textXtrackDetailsTitle = textXtrackDetailsTitle;
   }
@@ -96,12 +104,6 @@ public final class FragmentXtrackConfigBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.autoLocation;
-      AutoCompleteTextView autoLocation = ViewBindings.findChildViewById(rootView, id);
-      if (autoLocation == null) {
-        break missingId;
-      }
-
       id = R.id.btnReloadLocations;
       MaterialButton btnReloadLocations = ViewBindings.findChildViewById(rootView, id);
       if (btnReloadLocations == null) {
@@ -114,15 +116,21 @@ public final class FragmentXtrackConfigBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.editXtrackUrl;
-      TextInputEditText editXtrackUrl = ViewBindings.findChildViewById(rootView, id);
-      if (editXtrackUrl == null) {
+      id = R.id.btnSelectDevice;
+      MaterialButton btnSelectDevice = ViewBindings.findChildViewById(rootView, id);
+      if (btnSelectDevice == null) {
         break missingId;
       }
 
-      id = R.id.layoutLocation;
-      TextInputLayout layoutLocation = ViewBindings.findChildViewById(rootView, id);
-      if (layoutLocation == null) {
+      id = R.id.btnSelectLocation;
+      MaterialButton btnSelectLocation = ViewBindings.findChildViewById(rootView, id);
+      if (btnSelectLocation == null) {
+        break missingId;
+      }
+
+      id = R.id.editXtrackUrl;
+      TextInputEditText editXtrackUrl = ViewBindings.findChildViewById(rootView, id);
+      if (editXtrackUrl == null) {
         break missingId;
       }
 
@@ -132,9 +140,21 @@ public final class FragmentXtrackConfigBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.progressDevices;
+      ProgressBar progressDevices = ViewBindings.findChildViewById(rootView, id);
+      if (progressDevices == null) {
+        break missingId;
+      }
+
       id = R.id.progressLocations;
       ProgressBar progressLocations = ViewBindings.findChildViewById(rootView, id);
       if (progressLocations == null) {
+        break missingId;
+      }
+
+      id = R.id.textDeviceStatus;
+      TextView textDeviceStatus = ViewBindings.findChildViewById(rootView, id);
+      if (textDeviceStatus == null) {
         break missingId;
       }
 
@@ -150,9 +170,10 @@ public final class FragmentXtrackConfigBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentXtrackConfigBinding((ScrollView) rootView, autoLocation,
-          btnReloadLocations, btnSaveXtrack, editXtrackUrl, layoutLocation, layoutXtrackUrl,
-          progressLocations, textXtrackDetails, textXtrackDetailsTitle);
+      return new FragmentXtrackConfigBinding((ScrollView) rootView, btnReloadLocations,
+          btnSaveXtrack, btnSelectDevice, btnSelectLocation, editXtrackUrl, layoutXtrackUrl,
+          progressDevices, progressLocations, textDeviceStatus, textXtrackDetails,
+          textXtrackDetailsTitle);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

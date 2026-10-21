@@ -1,0 +1,72 @@
+# Instrução para portar: buscar e aplicar configuração do device no XTrack
+
+## Objetivo
+
+Implementar em outro projeto o carregamento automático e manual da configuração RFID associada a um device XTrack. O device é identificado pelo campo `UID`, enquanto o texto com as configurações `PREFIX` e `EPC_LEN` vem no campo `NAME`. Não confundir esses campos: o UID serve para localizar/selecionar o device; o NAME é o payload de configuração que deve ser interpretado.
+
+Exemplo de item retornado pelo XTrack:
+
+```json
+{
+  "ID": "6",
+  "ACTIVE": "1",
+  "UID": "COLETOR_ALMOX",
+  "NAME": "{ PREFIX :[ 123 , 456 ], EPC_LEN:[]}"
+}
+```
+
+Neste exemplo, procurar o device cujo UID seja `COLETOR_ALMOX`, depois parsear o NAME para obter prefixes `[123, 456]` e EPC lengths `[]`.
+
+## Processo completo
+
+1. Ler do armazenamento local o URL do XTrack e o UID do device selecionado. Não depender de NAME salvo para localizar o device.
+2. Fazer uma única chamada GetDevice sem filtro, ao endpoint XTrack configurado. O payload enviado é o comando completo de listagem, no protocolo do projeto (atualmente XML):
+   `<msg><command>GetDevice</command><terminal>ERP</terminal></msg>`
+   Não chamar GetDevice filtrando por NAME.
+3. Fazer parse da resposta. O XTrack pode responder JSON com `data` como array (ou, se necessário para compatibilidade, como objeto único); manter compatibilidade XML caso o projeto já a utilize. Converter cada item para um modelo de device com pelo menos `id`, `active`, `uid` e `name`.
+4. Para a interface, listar devices ativos e apresentar somente o UID. Ao escolher um item, persistir pelo menos UID, além de ID/NAME se o projeto precisar para apresentação ou auditoria.
+5. Resolver o item selecionado comparando o UID salvo com o UID dos itens retornados, sem diferenciar maiúsculas/minúsculas e removendo espaços das pontas (`trim`). Não comparar o UID com NAME.
+6. Se não houver UID salvo, procurar na lista completa um item cujo UID seja `COLETOR_ALMOX` (case-insensitive), selecionar esse como padrão e persistir seu UID/ID/NAME.
+7. No item encontrado, ler `NAME` e interpretá-lo como payload de configuração. Usar UID apenas como fallback se NAME estiver vazio; não procurar o device novamente usando NAME como filtro.
+8. Extrair `PREFIX` e `EPC_LEN` de NAME. Aplicar os valores válidos às configurações persistentes do app e atualizar o estado em memória para que o filtro de leitura RFID passe a usá-los.
+
+## Funções sugeridas / responsabilidades
+
+- `fetchDevices(xtrackUrl)`: valida URL; envia GetDevice sem filtro; verifica resposta vazia/HTTP; chama o parser; retorna resultado tipado (`Result<List<Device>>` ou equivalente).
+- `parseDevicesResponse(body)`: detecta JSON/XML e delega ao parser correspondente. Para JSON, aceitar `data` como array e, se necessário, objeto único. Ler as propriedades sem assumir que os nomes das chaves vêm em caixa específica.
+- `parseDeviceJsonObject(obj)` / `parseDevicesXml(xml)`: converte cada registro em `Device(id, uid, name, active)`. Tratar `ACTIVE == "0"` como inativo; strings devem ser aparadas com `trim()`.
+- `normalizeUid(value)`: retornar `value.trim().lowercase(Locale.ROOT)` (ou equivalente da linguagem) para comparar UID sem diferenças de caixa.
+- `findSelectedDevice(devices, selectedUid)`: procurar por UID normalizado. Se `selectedUid` estiver vazio, procurar UID `COLETOR_ALMOX`. Não procurar por NAME.
+- `parseDeviceConfig(device.name)`: interpretar o NAME como payload `PREFIX`/`EPC_LEN` e devolver campos opcionais mais erros de formato.
+- `applyDeviceConfig(config)`: persistir e propagar os campos que foram fornecidos. Prefixes devem ser normalizados para maiúsculas se esse for o padrão do filtro RFID do projeto; EPC_LEN deve ser convertido para inteiros positivos.
+- `loadDeviceConfigOnStartup()`: após carregar settings persistidas, chamar `fetchDevices`, resolver por UID (ou fallback `COLETOR_ALMOX`), parsear o NAME do item encontrado e aplicar. Executar em coroutine/thread de IO para não bloquear a interface.
+- `onDeviceSelected(uid)`: persistir a seleção, buscar novamente GetDevice completo (ou reutilizar uma lista atual válida), localizar pelo UID e aplicar o NAME do device.
+
+## Regras de parsing e validação
+
+- Os campos PREFIX e EPC_LEN são opcionais: não exigir que ambos existam.
+- Se uma chave estiver presente, o valor deve ser uma lista entre colchetes. Aceitar espaços, por exemplo `{ PREFIX :[ 123 , 456 ], EPC_LEN:[] }`.
+- Aceitar chaves sem aspas ou entre aspas e separadores `:` ou `=` se o formato do XTrack/projeto exigir. Fazer escape seguro das chaves quando usar regex.
+- Lista vazia é válida. `PREFIX:[]` significa não aplicar filtro de prefixo. `EPC_LEN:[]` significa não restringir tamanhos. Ausência de um campo deve deixar o valor já configurado como está; lista vazia presente deve limpar a configuração daquele campo.
+- Para PREFIX, separar por vírgula, aparar espaços/aspas e descartar itens vazios.
+- Para EPC_LEN, separar por vírgula, aparar espaços/aspas e aceitar somente inteiros positivos. Reportar valores inválidos sem rejeitar o outro campo válido.
+- Não mostrar “UID inválido” só porque PREFIX ou EPC_LEN não foram fornecidos. A mensagem deve refletir apenas erro real de formato/valor ou falha de rede/resolução.
+
+## Exemplo de resultado esperado
+
+Resposta GetDevice lista `UID = COLETOR_ALMOX` e `NAME = "{ PREFIX :[ 123 , 456 ], EPC_LEN:[] }"`:
+
+- UI mostra `COLETOR_ALMOX`.
+- O app encontra a linha comparando UID.
+- O app parseia o NAME, salva prefixes `123` e `456`, e salva EPC lengths como lista vazia (sem filtro por tamanho).
+- A configuração é aplicada tanto quando o usuário seleciona o device quanto na inicialização do app.
+
+## Critérios de aceite
+
+- A requisição de devices é sempre GetDevice completo, sem filtro por NAME.
+- Device selecionado e fallback são resolvidos por UID.
+- O NAME do item encontrado é a fonte de PREFIX/EPC_LEN.
+- A seleção persiste e é restaurada após reiniciar o app.
+- Campos ausentes não geram erro; listas vazias limpam o filtro correspondente.
+- Falha de rede ou UID não encontrado não apaga silenciosamente a configuração já persistida.
+- Testar build e, idealmente, testes unitários para parser com lista normal, campos ausentes, listas vazias, chaves com espaços/aspas e valores EPC_LEN inválidos.

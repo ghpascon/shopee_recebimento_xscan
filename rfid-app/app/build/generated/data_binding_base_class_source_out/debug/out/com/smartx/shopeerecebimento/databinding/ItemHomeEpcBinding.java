@@ -22,14 +22,10 @@ public final class ItemHomeEpcBinding implements ViewBinding {
   @NonNull
   public final TextView textDescription;
 
-  @NonNull
-  public final TextView textEpc;
-
-  private ItemHomeEpcBinding(@NonNull MaterialCardView rootView, @NonNull TextView textDescription,
-      @NonNull TextView textEpc) {
+  private ItemHomeEpcBinding(@NonNull MaterialCardView rootView,
+      @NonNull TextView textDescription) {
     this.rootView = rootView;
     this.textDescription = textDescription;
-    this.textEpc = textEpc;
   }
 
   @Override
@@ -65,13 +61,7 @@ public final class ItemHomeEpcBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.textEpc;
-      TextView textEpc = ViewBindings.findChildViewById(rootView, id);
-      if (textEpc == null) {
-        break missingId;
-      }
-
-      return new ItemHomeEpcBinding((MaterialCardView) rootView, textDescription, textEpc);
+      return new ItemHomeEpcBinding((MaterialCardView) rootView, textDescription);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

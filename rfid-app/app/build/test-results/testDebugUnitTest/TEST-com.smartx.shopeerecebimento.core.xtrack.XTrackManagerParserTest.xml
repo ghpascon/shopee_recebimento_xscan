@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.smartx.shopeerecebimento.core.xtrack.XTrackManagerParserTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-21T17:07:39" hostname="gabriel-Latitude-3420" time="0.247">
+  <properties/>
+  <testcase name="parseDevicesResponse_acceptsSingleJsonDataObjectAndXml" classname="com.smartx.shopeerecebimento.core.xtrack.XTrackManagerParserTest" time="0.228"/>
+  <testcase name="parseDeviceConfig_acceptsSpacesAndQuotedKeysAndValues" classname="com.smartx.shopeerecebimento.core.xtrack.XTrackManagerParserTest" time="0.009"/>
+  <testcase name="parseObjectInfosXml_mapsRfidIdCodeToDescriptionAndObjectIdCode" classname="com.smartx.shopeerecebimento.core.xtrack.XTrackManagerParserTest" time="0.006"/>
+  <testcase name="parseDevicesResponse_parsesJsonArrayAndCaseInsensitiveKeys" classname="com.smartx.shopeerecebimento.core.xtrack.XTrackManagerParserTest" time="0.001"/>
+  <testcase name="parseDeviceConfig_allInvalidLengthsDoNotClearExistingSetting" classname="com.smartx.shopeerecebimento.core.xtrack.XTrackManagerParserTest" time="0.0"/>
+  <testcase name="findSelectedDevice_matchesUidAndUsesDefaultWhenSelectionMissing" classname="com.smartx.shopeerecebimento.core.xtrack.XTrackManagerParserTest" time="0.001"/>
+  <testcase name="parseDeviceConfig_keepsValidLengthsAndReportsInvalidValues" classname="com.smartx.shopeerecebimento.core.xtrack.XTrackManagerParserTest" time="0.0"/>
+  <testcase name="parseDeviceConfig_distinguishesMissingAndEmptyFields" classname="com.smartx.shopeerecebimento.core.xtrack.XTrackManagerParserTest" time="0.001"/>
+  <testcase name="parseLocationsXml_ignoresRowsWithoutIdAndName" classname="com.smartx.shopeerecebimento.core.xtrack.XTrackManagerParserTest" time="0.0"/>
+  <testcase name="parseLocationsXml_parsesGetLocationResponse" classname="com.smartx.shopeerecebimento.core.xtrack.XTrackManagerParserTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

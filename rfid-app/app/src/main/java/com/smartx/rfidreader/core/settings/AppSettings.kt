@@ -14,8 +14,13 @@ data class AppSettings(
     val lastReaderId: String = AppSettingsRepository.DEFAULT_READER_ID,
     val buzzerEnabled: Boolean = true,
     val rssiFilter: Int = -120,
+    val epcLen: Int? = null,
+    val epcLengths: List<Int>? = null,
     val prefixes: List<String> = emptyList(),
     val xtrackUrl: String = AppSettingsRepository.DEFAULT_XTRACK_URL,
+    val selectedDeviceUid: String = "",
+    val selectedDeviceId: String = "",
+    val selectedDeviceName: String = "",
     val selectedLocationId: String = "",
     val selectedLocationName: String = "",
     val webhookUrl: String = "",
@@ -40,9 +45,14 @@ class AppSettingsRepository(context: Context) {
         private val KEY_READER_ID = stringPreferencesKey("last_reader_id")
         private val KEY_BUZZER = booleanPreferencesKey("buzzer_enabled")
         private val KEY_RSSI = intPreferencesKey("rssi_filter")
+        private val KEY_EPC_LEN = intPreferencesKey("epc_len")
+        private val KEY_EPC_LENGTHS = stringPreferencesKey("epc_lengths")
         private val KEY_PREFIXES = stringPreferencesKey("prefixes")
         private val KEY_LAST_BLE = stringPreferencesKey("last_ble_address")
         private val KEY_XTRACK_URL = stringPreferencesKey("xtrack_url")
+        private val KEY_DEVICE_UID = stringPreferencesKey("selected_device_uid")
+        private val KEY_DEVICE_ID = stringPreferencesKey("selected_device_id")
+        private val KEY_DEVICE_NAME = stringPreferencesKey("selected_device_name")
         private val KEY_LOCATION_ID = stringPreferencesKey("selected_location_id")
         private val KEY_LOCATION_NAME = stringPreferencesKey("selected_location_name")
         private val KEY_WEBHOOK = stringPreferencesKey("webhook_url")
@@ -57,13 +67,21 @@ class AppSettingsRepository(context: Context) {
         }
         .map { prefs ->
             val prefixStr = prefs[KEY_PREFIXES] ?: ""
+            val epcLengthsStr = prefs[KEY_EPC_LENGTHS]
             AppSettings(
                 lastReaderId = prefs[KEY_READER_ID]?.takeIf { it.isNotBlank() } ?: DEFAULT_READER_ID,
                 buzzerEnabled = prefs[KEY_BUZZER] ?: true,
                 rssiFilter = prefs[KEY_RSSI] ?: -120,
+                epcLen = prefs[KEY_EPC_LEN]?.takeIf { it > 0 },
+                epcLengths = epcLengthsStr?.split("|")
+                    ?.mapNotNull { it.toIntOrNull()?.takeIf { length -> length > 0 } }
+                    ?: if (epcLengthsStr != null) emptyList() else null,
                 prefixes = if (prefixStr.isBlank()) emptyList()
                            else prefixStr.split("|").filter { it.isNotBlank() },
                 xtrackUrl = prefs[KEY_XTRACK_URL]?.takeIf { it.isNotBlank() } ?: DEFAULT_XTRACK_URL,
+                selectedDeviceUid = prefs[KEY_DEVICE_UID] ?: "",
+                selectedDeviceId = prefs[KEY_DEVICE_ID] ?: "",
+                selectedDeviceName = prefs[KEY_DEVICE_NAME] ?: "",
                 selectedLocationId = prefs[KEY_LOCATION_ID] ?: "",
                 selectedLocationName = prefs[KEY_LOCATION_NAME] ?: "",
                 webhookUrl = prefs[KEY_WEBHOOK] ?: "",
@@ -79,8 +97,19 @@ class AppSettingsRepository(context: Context) {
             prefs[KEY_READER_ID] = settings.lastReaderId
             prefs[KEY_BUZZER] = settings.buzzerEnabled
             prefs[KEY_RSSI] = settings.rssiFilter
+            if (settings.epcLen != null && settings.epcLen > 0) {
+                prefs[KEY_EPC_LEN] = settings.epcLen
+            } else {
+                prefs.remove(KEY_EPC_LEN)
+            }
+            settings.epcLengths?.let { lengths ->
+                prefs[KEY_EPC_LENGTHS] = lengths.filter { it > 0 }.distinct().joinToString("|")
+            } ?: prefs.remove(KEY_EPC_LENGTHS)
             prefs[KEY_PREFIXES] = settings.prefixes.joinToString("|")
             prefs[KEY_XTRACK_URL] = settings.xtrackUrl
+            prefs[KEY_DEVICE_UID] = settings.selectedDeviceUid
+            prefs[KEY_DEVICE_ID] = settings.selectedDeviceId
+            prefs[KEY_DEVICE_NAME] = settings.selectedDeviceName
             prefs[KEY_LOCATION_ID] = settings.selectedLocationId
             prefs[KEY_LOCATION_NAME] = settings.selectedLocationName
             prefs[KEY_WEBHOOK] = settings.webhookUrl

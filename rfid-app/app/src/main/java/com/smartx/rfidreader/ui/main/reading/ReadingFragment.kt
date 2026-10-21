@@ -98,7 +98,7 @@ class ReadingFragment : Fragment() {
         binding.btnToggleInventory.setOnClickListener {
             viewModel.toggleInventory()
         }
-        binding.btnClearTags.setOnClickListener {
+        binding.restartReadingButton.setOnClickListener {
             viewModel.clearTags()
         }
         binding.btnSaveReading.setOnClickListener {
@@ -249,7 +249,7 @@ class ReadingFragment : Fragment() {
                     viewModel.uiState.collect { state ->
                         val connected = state.connectionState == ReaderConnectionState.CONNECTED
                         binding.btnToggleInventory.isEnabled = connected
-                        binding.btnClearTags.isEnabled = connected
+                        binding.restartReadingButton.isEnabled = connected
 
                         if (state.isInventorying) {
                             binding.btnToggleInventory.text = getString(R.string.btn_stop_inventory)

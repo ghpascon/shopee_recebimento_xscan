@@ -48,6 +48,39 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/label_xtrack_device"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelectDevice"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hint_xtrack_device"
+                    app:icon="@android:drawable/arrow_down_float"
+                    app:iconGravity="end" />
+
+                <ProgressBar
+                    android:id="@+id/progressDevices"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/textDeviceStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="@string/helper_xtrack_url"
                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
@@ -69,19 +102,15 @@
                     android:text="@string/label_location"
                     android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layoutLocation"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelectLocation"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_location">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/autoLocation"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="none" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginTop="8dp"
+                    android:text="@string/hint_location"
+                    app:icon="@android:drawable/arrow_down_float"
+                    app:iconGravity="end" />
 
                 <TextView
                     android:layout_width="match_parent"

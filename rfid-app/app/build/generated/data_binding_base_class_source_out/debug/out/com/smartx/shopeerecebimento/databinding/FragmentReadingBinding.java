@@ -28,9 +28,6 @@ public final class FragmentReadingBinding implements ViewBinding {
   public final LinearLayout actionBar;
 
   @NonNull
-  public final MaterialButton btnClearTags;
-
-  @NonNull
   public final MaterialButton btnExportCsv;
 
   @NonNull
@@ -61,18 +58,20 @@ public final class FragmentReadingBinding implements ViewBinding {
   public final RecyclerView recyclerViewTags;
 
   @NonNull
+  public final MaterialButton restartReadingButton;
+
+  @NonNull
   public final TextView textTagCount;
 
   private FragmentReadingBinding(@NonNull ConstraintLayout rootView,
-      @NonNull LinearLayout actionBar, @NonNull MaterialButton btnClearTags,
-      @NonNull MaterialButton btnExportCsv, @NonNull MaterialButton btnSaveReading,
-      @NonNull MaterialButton btnToggleInventory, @NonNull Chip chip100, @NonNull Chip chip200,
-      @NonNull Chip chip50, @NonNull Chip chipAll, @NonNull ChipGroup chipGroupLimit,
-      @NonNull LinearLayout limitBar, @NonNull RecyclerView recyclerViewTags,
+      @NonNull LinearLayout actionBar, @NonNull MaterialButton btnExportCsv,
+      @NonNull MaterialButton btnSaveReading, @NonNull MaterialButton btnToggleInventory,
+      @NonNull Chip chip100, @NonNull Chip chip200, @NonNull Chip chip50, @NonNull Chip chipAll,
+      @NonNull ChipGroup chipGroupLimit, @NonNull LinearLayout limitBar,
+      @NonNull RecyclerView recyclerViewTags, @NonNull MaterialButton restartReadingButton,
       @NonNull TextView textTagCount) {
     this.rootView = rootView;
     this.actionBar = actionBar;
-    this.btnClearTags = btnClearTags;
     this.btnExportCsv = btnExportCsv;
     this.btnSaveReading = btnSaveReading;
     this.btnToggleInventory = btnToggleInventory;
@@ -83,6 +82,7 @@ public final class FragmentReadingBinding implements ViewBinding {
     this.chipGroupLimit = chipGroupLimit;
     this.limitBar = limitBar;
     this.recyclerViewTags = recyclerViewTags;
+    this.restartReadingButton = restartReadingButton;
     this.textTagCount = textTagCount;
   }
 
@@ -116,12 +116,6 @@ public final class FragmentReadingBinding implements ViewBinding {
       id = R.id.actionBar;
       LinearLayout actionBar = ViewBindings.findChildViewById(rootView, id);
       if (actionBar == null) {
-        break missingId;
-      }
-
-      id = R.id.btnClearTags;
-      MaterialButton btnClearTags = ViewBindings.findChildViewById(rootView, id);
-      if (btnClearTags == null) {
         break missingId;
       }
 
@@ -185,15 +179,21 @@ public final class FragmentReadingBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.restartReadingButton;
+      MaterialButton restartReadingButton = ViewBindings.findChildViewById(rootView, id);
+      if (restartReadingButton == null) {
+        break missingId;
+      }
+
       id = R.id.textTagCount;
       TextView textTagCount = ViewBindings.findChildViewById(rootView, id);
       if (textTagCount == null) {
         break missingId;
       }
 
-      return new FragmentReadingBinding((ConstraintLayout) rootView, actionBar, btnClearTags,
-          btnExportCsv, btnSaveReading, btnToggleInventory, chip100, chip200, chip50, chipAll,
-          chipGroupLimit, limitBar, recyclerViewTags, textTagCount);
+      return new FragmentReadingBinding((ConstraintLayout) rootView, actionBar, btnExportCsv,
+          btnSaveReading, btnToggleInventory, chip100, chip200, chip50, chipAll, chipGroupLimit,
+          limitBar, recyclerViewTags, restartReadingButton, textTagCount);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
