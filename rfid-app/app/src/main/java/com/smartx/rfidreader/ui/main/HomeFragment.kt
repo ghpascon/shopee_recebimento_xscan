@@ -18,7 +18,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.smartx.shopeerecebimento.R
 import com.smartx.shopeerecebimento.core.reader.RfidTag
-import com.smartx.shopeerecebimento.core.reader.ReaderConnectionState
 import com.smartx.shopeerecebimento.core.webhook.WebhookService
 import com.smartx.shopeerecebimento.databinding.FragmentHomeBinding
 import kotlinx.coroutines.launch
@@ -110,7 +109,6 @@ class HomeFragment : Fragment() {
                 launch {
                     viewModel.uiState.collect { state ->
                         isCurrentlyInventorying = state.isInventorying
-                        updateHomeStatus(state)
                         updateConfirmButtonState()
                     }
                 }
@@ -244,26 +242,6 @@ class HomeFragment : Fragment() {
                 .setOnClickListener { commitCapturedEpc() }
         }
         dialog.show()
-    }
-
-    private fun updateHomeStatus(state: MainUiState) {
-        val statusText = when {
-            state.isInventorying -> "Lendo"
-            state.connectionState == ReaderConnectionState.CONNECTING -> "Conectando..."
-            state.connectionState == ReaderConnectionState.CONNECTED -> "Conectado"
-            state.connectionState == ReaderConnectionState.ERROR -> "Erro"
-            else -> "Desconectado"
-        }
-
-        val statusDrawable = when {
-            state.isInventorying -> R.drawable.ic_status_active
-            state.connectionState == ReaderConnectionState.CONNECTED -> R.drawable.ic_status_connected
-            state.connectionState == ReaderConnectionState.CONNECTING -> R.drawable.ic_status_connected
-            else -> R.drawable.ic_status_disconnected
-        }
-
-        binding.textStatusHome.text = statusText
-        binding.statusDot.setBackgroundResource(statusDrawable)
     }
 
     private fun showSnackbar(message: String) {

@@ -4,10 +4,8 @@ package com.smartx.shopeerecebimento.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -28,9 +26,6 @@ public final class FragmentReaderSelectionBinding implements ViewBinding {
   public final MaterialButton btnDisconnect;
 
   @NonNull
-  public final ImageView iconStatus;
-
-  @NonNull
   public final ProgressBar progressBar;
 
   @NonNull
@@ -39,20 +34,14 @@ public final class FragmentReaderSelectionBinding implements ViewBinding {
   @NonNull
   public final LinearLayout statusBanner;
 
-  @NonNull
-  public final TextView textConnectionStatus;
-
   private FragmentReaderSelectionBinding(@NonNull ConstraintLayout rootView,
-      @NonNull MaterialButton btnDisconnect, @NonNull ImageView iconStatus,
-      @NonNull ProgressBar progressBar, @NonNull RecyclerView recyclerViewReaders,
-      @NonNull LinearLayout statusBanner, @NonNull TextView textConnectionStatus) {
+      @NonNull MaterialButton btnDisconnect, @NonNull ProgressBar progressBar,
+      @NonNull RecyclerView recyclerViewReaders, @NonNull LinearLayout statusBanner) {
     this.rootView = rootView;
     this.btnDisconnect = btnDisconnect;
-    this.iconStatus = iconStatus;
     this.progressBar = progressBar;
     this.recyclerViewReaders = recyclerViewReaders;
     this.statusBanner = statusBanner;
-    this.textConnectionStatus = textConnectionStatus;
   }
 
   @Override
@@ -88,12 +77,6 @@ public final class FragmentReaderSelectionBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.iconStatus;
-      ImageView iconStatus = ViewBindings.findChildViewById(rootView, id);
-      if (iconStatus == null) {
-        break missingId;
-      }
-
       id = R.id.progressBar;
       ProgressBar progressBar = ViewBindings.findChildViewById(rootView, id);
       if (progressBar == null) {
@@ -112,14 +95,8 @@ public final class FragmentReaderSelectionBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.textConnectionStatus;
-      TextView textConnectionStatus = ViewBindings.findChildViewById(rootView, id);
-      if (textConnectionStatus == null) {
-        break missingId;
-      }
-
       return new FragmentReaderSelectionBinding((ConstraintLayout) rootView, btnDisconnect,
-          iconStatus, progressBar, recyclerViewReaders, statusBanner, textConnectionStatus);
+          progressBar, recyclerViewReaders, statusBanner);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

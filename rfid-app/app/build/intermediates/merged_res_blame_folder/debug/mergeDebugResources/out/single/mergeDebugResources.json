@@ -52,6 +52,14 @@
         "source": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-main-63:/drawable/ic_status_inactive.xml"
     },
     {
+        "merged": "com.smartx.shopeerecebimento.app-debug-61:/layout_fragment_home.xml.flat",
+        "source": "com.smartx.shopeerecebimento.app-main-63:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "com.smartx.shopeerecebimento.app-debug-61:/layout_fragment_reader_selection.xml.flat",
+        "source": "com.smartx.shopeerecebimento.app-main-63:/layout/fragment_reader_selection.xml"
+    },
+    {
         "merged": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-debug-61:/mipmap-anydpi-v26_ic_launcher.xml.flat",
         "source": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-main-63:/mipmap-anydpi-v26/ic_launcher.xml"
     },
@@ -136,10 +144,6 @@
         "source": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-main-63:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
-        "merged": "com.smartx.shopeerecebimento.app-debug-61:/layout_dialog_manual_epc_capture.xml.flat",
-        "source": "com.smartx.shopeerecebimento.app-main-63:/layout/dialog_manual_epc_capture.xml"
-    },
-    {
         "merged": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-debug-61:/layout_fragment_login.xml.flat",
         "source": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-main-63:/layout/fragment_login.xml"
     },
@@ -190,10 +194,6 @@
     {
         "merged": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-debug-61:/layout_item_unregistered_epc.xml.flat",
         "source": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-main-63:/layout/item_unregistered_epc.xml"
-    },
-    {
-        "merged": "com.smartx.shopeerecebimento.app-debug-61:/layout_fragment_reading.xml.flat",
-        "source": "com.smartx.shopeerecebimento.app-main-63:/layout/fragment_reading.xml"
     },
     {
         "merged": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-debug-61:/layout_dialog_inventory_name.xml.flat",

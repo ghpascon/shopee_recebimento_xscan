@@ -24,17 +24,32 @@ import kotlinx.coroutines.withContext
 class XR2Reader : IRfidReader {
 
     companion object {
-        /** Configura o XR2 para o gatilho 523 não acionar o scanner óptico. */
+        private const val TAG = "XR2Reader"
+        // The SDK sample uses 0- for RFID key mapping; app keycode 523 is handled by MainActivity.
+        private const val RFID_KEY_MAPPING = "0-"
+        private const val BARCODE_SCAN_KEYS = "520-521-522-"
+
+        /** Reserve the XR2 handle trigger (523) for RFID and never for the barcode scan head. */
         @JvmStatic
-        fun disableBarcodeOnRfidTrigger() {
+        fun configureExclusiveRfidTrigger() {
             try {
                 val deviceManager = DeviceManager()
-                deviceManager.setSettingProperty("persist-persist.sys.rfid.key", "0-")
-                // O SDK documenta que remover 523 desta lista impede o disparo do scan head.
-                deviceManager.setSettingProperty("persist-persist.sys.scan.key", "520-521-522-")
-                Log.i("XR2Reader", "Scanner configurado sem 523 (scan.key=520-521-522-)")
+                // Match the vendor SDK sample: leave RFID's proprietary key map at 0-.
+                deviceManager.setSettingProperty(
+                    "persist-persist.sys.rfid.key",
+                    RFID_KEY_MAPPING
+                )
+                // Explicitly exclude physical handle key 523 from barcode activation.
+                deviceManager.setSettingProperty(
+                    "persist-persist.sys.scan.key",
+                    BARCODE_SCAN_KEYS
+                )
+                Log.i(
+                    TAG,
+                    "XR2 trigger configuration: rfid.key=$RFID_KEY_MAPPING, scan.key=$BARCODE_SCAN_KEYS (523 excluded)"
+                )
             } catch (error: Exception) {
-                Log.w("XR2Reader", "Não foi possível configurar as teclas do scanner: ${error.message}")
+                Log.e(TAG, "Failed to reserve key 523 for RFID", error)
             }
         }
     }
@@ -82,9 +97,9 @@ class XR2Reader : IRfidReader {
     override suspend fun connect(context: Context): Boolean = withContext(Dispatchers.IO) {
         _connectionState.value = ReaderConnectionState.CONNECTING
         return@withContext try {
-            // Remove keycode 523 (trigger) da lista de scan de código de barras
-            // para que o gatilho nunca acione o leitor óptico.
-            configureBarcodeScanKeys()
+            // Mapeia a tecla 523 como gatilho RFID e mantém o barcode apenas nas
+            // teclas laterais 520/521/522.
+            configureExclusiveRfidTrigger()
 
             RFIDSDKManager.getInstance().power(true)
             // SDK precisa de ~1500ms para o módulo estabilizar após ligar
@@ -122,8 +137,8 @@ class XR2Reader : IRfidReader {
         } catch (e: Exception) {
             Log.e(TAG, "Erro ao desconectar XR2", e)
         } finally {
-            // Mantém o trigger fora das teclas de scanner também ao desconectar.
-            configureBarcodeScanKeys()
+            // Mantém o trigger mapeado somente para RFID também ao desconectar.
+            configureExclusiveRfidTrigger()
             _connectionState.value = ReaderConnectionState.DISCONNECTED
         }
         Unit
@@ -213,11 +228,4 @@ class XR2Reader : IRfidReader {
         return true
     }
 
-    /**
-     * Mantém o gatilho físico (523) fora da lista do scanner de código de barras.
-     * Assim, o barcode fica disponível apenas nas teclas laterais (520/521/522).
-     */
-    private fun configureBarcodeScanKeys() {
-        disableBarcodeOnRfidTrigger()
-    }
 }

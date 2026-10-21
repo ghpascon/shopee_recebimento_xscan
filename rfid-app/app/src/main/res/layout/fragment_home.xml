@@ -122,30 +122,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/statusRow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <View
-                android:id="@+id/statusDot"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/ic_status_inactive" />
-
-            <TextView
-                android:id="@+id/textStatusHome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Desconectado"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="?attr/colorOnSurfaceVariant" />
-        </LinearLayout>
-
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardTags"
             android:layout_width="match_parent"

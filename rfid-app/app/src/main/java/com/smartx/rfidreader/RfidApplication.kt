@@ -16,6 +16,6 @@ class RfidApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        XR2Reader.disableBarcodeOnRfidTrigger()
+        XR2Reader.configureExclusiveRfidTrigger()
     }
 }

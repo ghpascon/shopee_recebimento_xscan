@@ -46,19 +46,10 @@ public final class FragmentHomeBinding implements ViewBinding {
   public final NestedScrollView scrollHomeContent;
 
   @NonNull
-  public final View statusDot;
-
-  @NonNull
-  public final LinearLayout statusRow;
-
-  @NonNull
   public final LinearLayout summaryRow;
 
   @NonNull
   public final TextView textRegisteredCount;
-
-  @NonNull
-  public final TextView textStatusHome;
 
   @NonNull
   public final TextView textUnregisteredCount;
@@ -70,10 +61,9 @@ public final class FragmentHomeBinding implements ViewBinding {
       @NonNull MaterialButton btnAddManualEpc, @NonNull MaterialButton btnConfirm,
       @NonNull MaterialCardView cardRegisteredSummary, @NonNull MaterialCardView cardTags,
       @NonNull MaterialCardView cardUnregisteredSummary, @NonNull RecyclerView recyclerEpcs,
-      @NonNull NestedScrollView scrollHomeContent, @NonNull View statusDot,
-      @NonNull LinearLayout statusRow, @NonNull LinearLayout summaryRow,
-      @NonNull TextView textRegisteredCount, @NonNull TextView textStatusHome,
-      @NonNull TextView textUnregisteredCount, @NonNull TextView textUnregisteredInfo) {
+      @NonNull NestedScrollView scrollHomeContent, @NonNull LinearLayout summaryRow,
+      @NonNull TextView textRegisteredCount, @NonNull TextView textUnregisteredCount,
+      @NonNull TextView textUnregisteredInfo) {
     this.rootView = rootView;
     this.btnAddManualEpc = btnAddManualEpc;
     this.btnConfirm = btnConfirm;
@@ -82,11 +72,8 @@ public final class FragmentHomeBinding implements ViewBinding {
     this.cardUnregisteredSummary = cardUnregisteredSummary;
     this.recyclerEpcs = recyclerEpcs;
     this.scrollHomeContent = scrollHomeContent;
-    this.statusDot = statusDot;
-    this.statusRow = statusRow;
     this.summaryRow = summaryRow;
     this.textRegisteredCount = textRegisteredCount;
-    this.textStatusHome = textStatusHome;
     this.textUnregisteredCount = textUnregisteredCount;
     this.textUnregisteredInfo = textUnregisteredInfo;
   }
@@ -160,18 +147,6 @@ public final class FragmentHomeBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.statusDot;
-      View statusDot = ViewBindings.findChildViewById(rootView, id);
-      if (statusDot == null) {
-        break missingId;
-      }
-
-      id = R.id.statusRow;
-      LinearLayout statusRow = ViewBindings.findChildViewById(rootView, id);
-      if (statusRow == null) {
-        break missingId;
-      }
-
       id = R.id.summaryRow;
       LinearLayout summaryRow = ViewBindings.findChildViewById(rootView, id);
       if (summaryRow == null) {
@@ -181,12 +156,6 @@ public final class FragmentHomeBinding implements ViewBinding {
       id = R.id.textRegisteredCount;
       TextView textRegisteredCount = ViewBindings.findChildViewById(rootView, id);
       if (textRegisteredCount == null) {
-        break missingId;
-      }
-
-      id = R.id.textStatusHome;
-      TextView textStatusHome = ViewBindings.findChildViewById(rootView, id);
-      if (textStatusHome == null) {
         break missingId;
       }
 
@@ -204,8 +173,7 @@ public final class FragmentHomeBinding implements ViewBinding {
 
       return new FragmentHomeBinding((ConstraintLayout) rootView, btnAddManualEpc, btnConfirm,
           cardRegisteredSummary, cardTags, cardUnregisteredSummary, recyclerEpcs, scrollHomeContent,
-          statusDot, statusRow, summaryRow, textRegisteredCount, textStatusHome,
-          textUnregisteredCount, textUnregisteredInfo);
+          summaryRow, textRegisteredCount, textUnregisteredCount, textUnregisteredInfo);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

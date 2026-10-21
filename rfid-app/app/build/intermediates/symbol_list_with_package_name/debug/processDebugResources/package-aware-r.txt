@@ -3511,7 +3511,6 @@ id horizontal_only
 id icon
 id iconGps
 id iconReader
-id iconStatus
 id icon_group
 id icon_only
 id ifRoom
@@ -3770,8 +3769,6 @@ id startVertical
 id staticLayout
 id staticPostLayout
 id statusBanner
-id statusDot
-id statusRow
 id stop
 id stretch
 id submenuarrow
@@ -3798,7 +3795,6 @@ id text2
 id textBleAddress
 id textBleName
 id textBleScanStatus
-id textConnectionStatus
 id textCount
 id textDescription
 id textDeviceStatus
@@ -3836,7 +3832,6 @@ id textSpacerNoButtons
 id textSpacerNoTitle
 id textStart
 id textStatusDetail
-id textStatusHome
 id textStatusTime
 id textSubtitle
 id textSyncItemLabel

@@ -5,33 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Banner de status -->
+    <!-- Ação de desconexão; o estado da conexão aparece no header global. -->
     <LinearLayout
         android:id="@+id/statusBanner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorSurfaceVariant"
-        android:gravity="center_vertical"
+        android:gravity="end|center_vertical"
         android:orientation="horizontal"
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/iconStatus"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_marginEnd="10dp"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/textConnectionStatus"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/reader_selection_hint"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDisconnect"

@@ -162,7 +162,6 @@ id headerStatusDot
 id headerTitle
 id iconGps
 id iconReader
-id iconStatus
 id imageLogo
 id imgSyncStatus
 id inputInventoryName
@@ -210,14 +209,11 @@ id sliderPower
 id sliderRssi
 id spinnerSession
 id statusBanner
-id statusDot
-id statusRow
 id summaryRow
 id switchBuzzer
 id textBleAddress
 id textBleName
 id textBleScanStatus
-id textConnectionStatus
 id textCount
 id textDescription
 id textDeviceStatus
@@ -251,7 +247,6 @@ id textScanEpc
 id textScanRssi
 id textSendingStatus
 id textStatusDetail
-id textStatusHome
 id textStatusTime
 id textSubtitle
 id textSyncItemLabel

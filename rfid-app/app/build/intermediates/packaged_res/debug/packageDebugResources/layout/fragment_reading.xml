@@ -5,8 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Banner de status removido: agora fornecido pelo header global -->
-
     <!-- Barra de limite de exibição -->
     <LinearLayout
         android:id="@+id/limitBar"

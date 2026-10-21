@@ -113,26 +113,10 @@ class ReaderSelectionFragment : Fragment() {
                     val connecting = state.isConnecting
 
                     binding.progressBar.visibility = if (connecting) View.VISIBLE else View.GONE
+                    binding.statusBanner.visibility = if (connected) View.VISIBLE else View.GONE
                     binding.btnDisconnect.visibility = if (connected) View.VISIBLE else View.GONE
 
                     adapter.connectedReaderId = if (connected) viewModel.reader?.readerId ?: "" else ""
-
-                    binding.textConnectionStatus.text = when {
-                        connecting -> getString(R.string.status_connecting)
-                        connected -> getString(R.string.status_connected, viewModel.reader?.displayName ?: "")
-                        else -> getString(R.string.reader_selection_hint)
-                    }
-
-                    val iconRes = when (state.connectionState) {
-                        ReaderConnectionState.CONNECTED -> R.drawable.ic_status_active
-                        else -> null
-                    }
-                    if (iconRes != null) {
-                        binding.iconStatus.setImageResource(iconRes)
-                        binding.iconStatus.visibility = View.VISIBLE
-                    } else {
-                        binding.iconStatus.visibility = View.GONE
-                    }
 
                     state.errorMessage?.let { msg ->
                         Snackbar.make(binding.root, msg, Snackbar.LENGTH_LONG).show()
