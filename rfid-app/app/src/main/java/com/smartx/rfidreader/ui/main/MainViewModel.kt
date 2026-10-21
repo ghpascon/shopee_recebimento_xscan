@@ -43,6 +43,7 @@ data class MainUiState(
     val xtrackCommunicationWarning: String? = null,
     val xtrackDeviceConfigWarning: String? = null,
     val isAuthenticated: Boolean = false,
+    val canViewUnregisteredTags: Boolean = false,
     val appSettings: AppSettings = AppSettings(),
     val errorMessage: String? = null
 )
@@ -179,7 +180,12 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
         viewModelScope.launch {
             xtrack_manager.currentUser.collect { user ->
-                _uiState.update { it.copy(isAuthenticated = user != null) }
+                _uiState.update {
+                    it.copy(
+                        isAuthenticated = user != null,
+                        canViewUnregisteredTags = user?.canViewUnregisteredTags == true
+                    )
+                }
             }
         }
         // Publica estado do leitor no singleton global — visível por qualquer Activity
@@ -972,6 +978,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                         it.copy(
                             isLoggingIn = false,
                             isAuthenticated = true,
+                            canViewUnregisteredTags = result.user.canViewUnregisteredTags,
                             loginErrorMessage = null
                         )
                     }
@@ -983,6 +990,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                         it.copy(
                             isLoggingIn = false,
                             isAuthenticated = false,
+                            canViewUnregisteredTags = false,
                             loginErrorMessage = result.message
                         )
                     }

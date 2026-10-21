@@ -109,6 +109,8 @@ class HomeFragment : Fragment() {
                 launch {
                     viewModel.uiState.collect { state ->
                         isCurrentlyInventorying = state.isInventorying
+                        binding.cardUnregisteredSummary.visibility =
+                            if (state.canViewUnregisteredTags) View.VISIBLE else View.GONE
                         updateConfirmButtonState()
                     }
                 }

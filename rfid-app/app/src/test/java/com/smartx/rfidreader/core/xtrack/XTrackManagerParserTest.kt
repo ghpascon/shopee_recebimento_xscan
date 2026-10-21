@@ -7,6 +7,31 @@ import org.junit.Test
 class XTrackManagerParserTest {
 
     @Test
+    fun isAdminRole_matchesRoleIdAndAdminNamePrefixCaseInsensitively() {
+        val roles = """
+            {"data":[
+              {"ID":"1","NAME":"ADMINISTRATOR","PERMISSION":"ADMIN"},
+              {"ID":"2","NAME":"usuario"}
+            ]}
+        """.trimIndent()
+
+        assertTrue(xtrack_manager.isAdminRole("1", roles))
+        assertTrue(!xtrack_manager.isAdminRole("2", roles))
+        assertTrue(!xtrack_manager.isAdminRole("3", roles))
+    }
+
+    @Test
+    fun parseRolesResponse_supportsXmlAndSingleJsonRole() {
+        val xml = """
+            <root><data><ID>7</ID><NAME>admin_support</NAME><PERMISSION>ADMIN</PERMISSION></data></root>
+        """.trimIndent()
+        val json = """{"data":{"ID":"8","NAME":"Admin Regional"}}"""
+
+        assertEquals("admin_support", xtrack_manager.parseRolesResponse(xml).single().name)
+        assertTrue(xtrack_manager.isAdminRole("8", json))
+    }
+
+    @Test
     fun parseLocationsXml_parsesGetLocationResponse() {
         val xml = """
             <DocumentElement>

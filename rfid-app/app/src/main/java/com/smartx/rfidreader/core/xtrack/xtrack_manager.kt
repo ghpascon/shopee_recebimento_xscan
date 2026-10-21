@@ -29,7 +29,15 @@ data class XTrackUser(
     val id: String,
     val login: String,
     val name: String,
-    val allowedDepartmentIds: List<String>
+    val allowedDepartmentIds: List<String>,
+    val roleId: String,
+    val canViewUnregisteredTags: Boolean
+)
+
+data class XTrackRole(
+    val id: String,
+    val name: String,
+    val permission: String
 )
 
 data class XTrackLocation(
@@ -68,6 +76,7 @@ object xtrack_manager {
     private const val TAG = "xtrack_manager"
 
     private const val GET_USER_PAYLOAD = "<msg><command>GetUser</command><terminal>ERP</terminal></msg>"
+    private const val GET_ROLE_PAYLOAD = """{"command":"GetRole","terminal":"ERP"}"""
 
     private const val GET_LOCATION_PAYLOAD = "<msg><command>GetLocation</command><terminal>ERP</terminal></msg>"
     private const val GET_DEVICE_PAYLOAD = "<msg><command>GetDevice</command><terminal>ERP</terminal></msg>"
@@ -123,12 +132,23 @@ object xtrack_manager {
                 .map { it.trim() }
                 .filter { it.isNotBlank() }
                 .distinct()
+            val roleId = matched.first("ROLE")
+                .ifBlank { matched.first("ROLEID") }
+                .ifBlank { matched.first("ROLE_ID") }
+                .trim()
+            val canViewUnregisteredTags = runCatching {
+                isAdminRole(roleId, postJson(url, GET_ROLE_PAYLOAD))
+            }.onFailure { error ->
+                Log.w(TAG, "GetRole failed; keeping unregistered-tag card hidden", error)
+            }.getOrDefault(false)
 
             val user = XTrackUser(
                 id = matched.first("ID"),
                 login = matched.first("LOGIN"),
                 name = matched.first("NAME"),
-                allowedDepartmentIds = allowedDepartmentIds
+                allowedDepartmentIds = allowedDepartmentIds,
+                roleId = roleId,
+                canViewUnregisteredTags = canViewUnregisteredTags
             )
             _currentUser.value = user
             XTrackLoginResult.Success(user)
@@ -139,6 +159,46 @@ object xtrack_manager {
 
     fun logout() {
         _currentUser.value = null
+    }
+
+    internal fun parseRolesResponse(body: String): List<XTrackRole> {
+        val trimmed = body.trim()
+        if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+            val parsed = runCatching {
+                val root = if (trimmed.startsWith("[")) JSONArray(trimmed) else JSONObject(trimmed)
+                val data = when (root) {
+                    is JSONArray -> root
+                    is JSONObject -> root.findIgnoreCase("data")
+                    else -> null
+                }
+                when (data) {
+                    is JSONArray -> (0 until data.length()).mapNotNull { data.optJSONObject(it) }
+                    is JSONObject -> listOf(data)
+                    else -> emptyList()
+                }.mapNotNull { item ->
+                    val id = item.getStringIgnoreCase("ID")
+                    val name = item.getStringIgnoreCase("NAME")
+                    val permission = item.getStringIgnoreCase("PERMISSION")
+                    if (id.isBlank()) null else XTrackRole(id, name, permission)
+                }
+            }.getOrNull()
+            if (parsed != null) return parsed
+        }
+
+        return parseDataRows(body).mapNotNull { row ->
+            val id = row.first("ID").trim()
+            if (id.isBlank()) null
+            else XTrackRole(id, row.first("NAME").trim(), row.first("PERMISSION").trim())
+        }
+    }
+
+    internal fun isAdminRole(roleId: String, rolesResponse: String): Boolean {
+        if (roleId.isBlank()) return false
+        return parseRolesResponse(rolesResponse)
+            .firstOrNull { it.id.trim() == roleId.trim() }
+            ?.name
+            ?.trim()
+            ?.startsWith("admin", ignoreCase = true) == true
     }
 
     suspend fun checkCommunication(xtrackUrl: String): Result<Unit> = withContext(Dispatchers.IO) {
@@ -379,9 +439,12 @@ object xtrack_manager {
         return locations
     }
 
-    private fun postXml(url: String, payload: String): String {
-        val body = payload.trimIndent()
-            .toRequestBody("application/xml; charset=utf-8".toMediaType())
+    private fun postXml(url: String, payload: String): String = post(url, payload, "application/xml; charset=utf-8")
+
+    private fun postJson(url: String, payload: String): String = post(url, payload, "application/json; charset=utf-8")
+
+    private fun post(url: String, payload: String, contentType: String): String {
+        val body = payload.trimIndent().toRequestBody(contentType.toMediaType())
 
         val request = Request.Builder()
             .url(url)
@@ -399,7 +462,7 @@ object xtrack_manager {
             }
             Log.d(
                 TAG,
-                "HTTP ${response.code} GetLocation/GetUser contentType=${response.header("Content-Type").orEmpty()} " +
+                "HTTP ${response.code} XTrack contentType=${response.header("Content-Type").orEmpty()} " +
                     "bodyPreview=${rawBody.preview()}"
             )
             return rawBody
