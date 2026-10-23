@@ -3346,7 +3346,10 @@ id btnToggleScanInventory
 id btnToggleWebhook
 id btnToggleWebhookReading
 id btnWebhookConfig
+id buttonBackToConfirmation
+id buttonConfirmLocation
 id buttonPanel
+id buttonRejectLocation
 id cache_measures
 id callMeasure
 id cancel_button
@@ -3394,6 +3397,7 @@ id closest
 id collapseActionView
 id compress
 id confirm_button
+id confirmationContent
 id constraint
 id container
 id content
@@ -3502,6 +3506,7 @@ id headerReaderName
 id headerStatusDot
 id headerTitle
 id header_title
+id helpContent
 id hide_ime_id
 id hideable
 id home
@@ -3555,6 +3560,7 @@ id line3
 id linear
 id listMode
 id list_item
+id locationCard
 id m3_side_sheet
 id marquee
 id masked
@@ -3817,6 +3823,7 @@ id textPowerValue
 id textReaderId
 id textReaderName
 id textRecebimento
+id textReceivingLocation
 id textRegisteredCount
 id textResultMessage
 id textResultSymbol
@@ -4054,6 +4061,7 @@ layout fragment_config
 layout fragment_config_access
 layout fragment_confirm_result
 layout fragment_home
+layout fragment_location_confirmation
 layout fragment_login
 layout fragment_radar
 layout fragment_reader_selection
@@ -4372,6 +4380,15 @@ string label_session
 string label_webhook
 string label_webhook_interval
 string label_xtrack_device
+string location_confirmation_back
+string location_confirmation_help_message
+string location_confirmation_help_title
+string location_confirmation_loading
+string location_confirmation_no
+string location_confirmation_question
+string location_confirmation_title
+string location_confirmation_yes
+string location_not_configured
 string location_options_empty
 string login_btn_enter
 string login_hint_password

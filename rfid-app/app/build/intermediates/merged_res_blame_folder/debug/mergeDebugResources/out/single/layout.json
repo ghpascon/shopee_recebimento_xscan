@@ -44,6 +44,10 @@
         "source": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-main-63:/layout/activity_main.xml"
     },
     {
+        "merged": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-mergeDebugResources-60:/layout/fragment_location_confirmation.xml",
+        "source": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-main-63:/layout/fragment_location_confirmation.xml"
+    },
+    {
         "merged": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-mergeDebugResources-60:/layout/fragment_confirm_result.xml",
         "source": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-main-63:/layout/fragment_confirm_result.xml"
     },
@@ -142,5 +146,9 @@
     {
         "merged": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-mergeDebugResources-60:/layout/dialog_radar_scan.xml",
         "source": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-main-63:/layout/dialog_radar_scan.xml"
+    },
+    {
+        "merged": "com.smartx.shopeerecebimento.app-mergeDebugResources-60:/layout/item_home_epc.xml",
+        "source": "com.smartx.shopeerecebimento.app-main-63:/layout/item_home_epc.xml"
     }
 ]

@@ -16,6 +16,10 @@
         "source": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-main-63:/layout/activity_base.xml"
     },
     {
+        "merged": "com.smartx.shopeerecebimento.app-debug-61:/layout_item_home_epc.xml.flat",
+        "source": "com.smartx.shopeerecebimento.app-main-63:/layout/item_home_epc.xml"
+    },
+    {
         "merged": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-debug-61:/drawable_shopee_logo.png.flat",
         "source": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-main-63:/drawable/shopee_logo.png"
     },
@@ -66,6 +70,10 @@
     {
         "merged": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-debug-61:/layout_dialog_radar_scan.xml.flat",
         "source": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-main-63:/layout/dialog_radar_scan.xml"
+    },
+    {
+        "merged": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-debug-61:/layout_fragment_location_confirmation.xml.flat",
+        "source": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-main-63:/layout/fragment_location_confirmation.xml"
     },
     {
         "merged": "/home/gabriel/.gradle/daemon/8.10.2/com.smartx.shopeerecebimento.app-debug-61:/drawable_smtx_w.png.flat",

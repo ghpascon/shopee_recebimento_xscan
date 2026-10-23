@@ -12,7 +12,6 @@ import com.smartx.shopeerecebimento.ui.main.MainActivity
 import com.smartx.shopeerecebimento.ui.main.MainViewModel
 import com.smartx.shopeerecebimento.ui.main.config.ConfigFragment
 import com.smartx.shopeerecebimento.ui.main.config.XTrackConfigFragment
-import com.smartx.shopeerecebimento.ui.main.login.LoginFragment
 import com.smartx.shopeerecebimento.ui.main.reader.ReaderSelectionFragment
 
 class ConfigAccessFragment : Fragment() {
@@ -51,7 +50,7 @@ class ConfigAccessFragment : Fragment() {
                 Snackbar.make(binding.root, reason, Snackbar.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-            (requireActivity() as MainActivity).navigateTo(LoginFragment(), MainActivity.TAG_LOGIN)
+            (requireActivity() as MainActivity).requestLoginWithLocationConfirmation()
         }
 
         binding.btnBackHome.setOnClickListener {

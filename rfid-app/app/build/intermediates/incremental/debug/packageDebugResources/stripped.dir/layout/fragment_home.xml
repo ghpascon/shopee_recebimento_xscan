@@ -33,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:cardBackgroundColor="?attr/colorPrimaryContainer"
+            app:cardBackgroundColor="@color/status_synced_bg"
             app:cardCornerRadius="16dp">
 
             <LinearLayout
@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/home_registered_title"
                     android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                    android:textColor="?attr/colorOnPrimaryContainer" />
+                    android:textColor="@color/status_synced_text" />
 
                 <TextView
                     android:id="@+id/textRegisteredCount"
@@ -56,7 +56,7 @@
                     android:layout_marginTop="6dp"
                     android:text="0"
                     android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
-                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:textColor="@color/status_synced_text"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -128,7 +128,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            app:cardCornerRadius="16dp">
+            app:cardCornerRadius="16dp"
+            app:cardBackgroundColor="@android:color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"

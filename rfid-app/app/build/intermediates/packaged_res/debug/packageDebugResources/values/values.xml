@@ -201,6 +201,15 @@
     <string name="label_webhook">Webhook</string>
     <string name="label_webhook_interval">Intervalo (segundos)</string>
     <string name="label_xtrack_device">Device XTrack</string>
+    <string name="location_confirmation_back">Voltar</string>
+    <string name="location_confirmation_help_message">Não continue. Procure um responsável para confirmar ou corrigir o local de recebimento.</string>
+    <string name="location_confirmation_help_title">Procure ajuda</string>
+    <string name="location_confirmation_loading">Carregando…</string>
+    <string name="location_confirmation_no">Não</string>
+    <string name="location_confirmation_question">Este é o local de recebimento correto?</string>
+    <string name="location_confirmation_title">Confirmar localização:</string>
+    <string name="location_confirmation_yes">Sim, continuar para o login</string>
+    <string name="location_not_configured">Localização não configurada</string>
     <string name="location_options_empty">Nenhuma localização encontrada</string>
     <string name="login_btn_enter">Login</string>
     <string name="login_hint_password">Senha</string>

@@ -44,6 +44,7 @@ data class MainUiState(
     val xtrackDeviceConfigWarning: String? = null,
     val isAuthenticated: Boolean = false,
     val canViewUnregisteredTags: Boolean = false,
+    val isAppSettingsLoaded: Boolean = false,
     val appSettings: AppSettings = AppSettings(),
     val errorMessage: String? = null
 )
@@ -168,7 +169,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     init {
         viewModelScope.launch {
             settingsRepo.flow.collect { settings ->
-                _uiState.update { it.copy(appSettings = settings) }
+                _uiState.update { it.copy(appSettings = settings, isAppSettingsLoaded = true) }
                 val url = settings.xtrackUrl.trim()
                 val uid = xtrack_manager.normalizeUid(settings.selectedDeviceUid)
                 val key = "$url|$uid"

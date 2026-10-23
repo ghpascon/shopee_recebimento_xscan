@@ -6,6 +6,15 @@
     <string name="login_hint_password">Senha</string>
     <string name="login_btn_enter">Login</string>
     <string name="error_login_empty_fields">Informe usuário e senha</string>
+    <string name="location_confirmation_title">Confirmar localização:</string>
+    <string name="location_confirmation_loading">Carregando…</string>
+    <string name="location_confirmation_question">Este é o local de recebimento correto?</string>
+    <string name="location_confirmation_yes">Sim, continuar para o login</string>
+    <string name="location_confirmation_no">Não</string>
+    <string name="location_confirmation_help_title">Procure ajuda</string>
+    <string name="location_confirmation_help_message">Não continue. Procure um responsável para confirmar ou corrigir o local de recebimento.</string>
+    <string name="location_confirmation_back">Voltar</string>
+    <string name="location_not_configured">Localização não configurada</string>
 
     <!-- Tela de seleção legada -->
     <string name="selection_title">Selecionar Leitor RFID</string>

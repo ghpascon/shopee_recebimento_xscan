@@ -21,6 +21,7 @@ import com.smartx.shopeerecebimento.databinding.ActivityMainBinding
 import com.smartx.shopeerecebimento.ui.base.BaseActivity
 import com.smartx.shopeerecebimento.ui.main.access.ConfigAccessFragment
 import com.smartx.shopeerecebimento.ui.main.login.LoginFragment
+import com.smartx.shopeerecebimento.ui.main.login.LocationConfirmationFragment
 import com.smartx.shopeerecebimento.readers.xr2.XR2Reader
 import kotlinx.coroutines.launch
 
@@ -40,6 +41,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         private const val HEADER_HOLD_MS = 5000L
         const val TAG_HOME = "home"
         const val TAG_LOGIN = "login"
+        const val TAG_LOCATION_CONFIRMATION = "location_confirmation"
         const val TAG_CONFIG_ACCESS = "config_access"
     }
 
@@ -63,7 +65,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         viewModel.autoConnectLastReader()
 
         if (savedInstanceState == null) {
-            loadLogin()
+            showLocationConfirmation()
+        } else {
+            binding.root.post {
+                if (!viewModel.uiState.value.isAuthenticated) {
+                    val current = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+                    if (current !is LocationConfirmationFragment) showLocationConfirmation()
+                }
+            }
         }
 
         supportFragmentManager.addOnBackStackChangedListener {
@@ -76,7 +85,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private fun loadHomeOrLogin() {
-        if (viewModel.uiState.value.isAuthenticated) loadHome() else loadLogin()
+        if (viewModel.uiState.value.isAuthenticated) loadHome() else showLocationConfirmation()
     }
 
     private fun observeHeader() {
@@ -137,10 +146,32 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             .commit()
     }
 
-    private fun loadLogin() {
+    private fun showLogin() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, LoginFragment(), TAG_LOGIN)
             .commit()
+    }
+
+    private fun showLocationConfirmation(addToBackStack: Boolean = false) {
+        val current = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+        if (current is LocationConfirmationFragment && current.isVisible) return
+
+        val transaction = supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, LocationConfirmationFragment(), TAG_LOCATION_CONFIRMATION)
+        if (addToBackStack) transaction.addToBackStack(TAG_LOCATION_CONFIRMATION)
+        transaction.commit()
+    }
+
+    fun requestLoginWithLocationConfirmation() {
+        showLocationConfirmation(addToBackStack = true)
+    }
+
+    fun continueToLoginAfterLocationConfirmation() {
+        supportFragmentManager.popBackStackImmediate(
+            null,
+            androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
+        showLogin()
     }
 
     private fun loadConfigAccess() {
@@ -276,7 +307,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun onLogoutPressed() {
         supportFragmentManager.popBackStackImmediate(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        loadLogin()
+        showLocationConfirmation()
     }
 
 }
