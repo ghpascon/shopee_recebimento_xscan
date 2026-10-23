@@ -3,8 +3,24 @@ package com.smartx.shopeerecebimento.core.xtrack
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.json.JSONObject
 
 class XTrackManagerParserTest {
+
+    @Test
+    fun buildLoginLogPayload_includesUserAndConfirmedLocation() {
+        val payload = JSONObject(
+            xtrack_manager.buildLoginLogPayload("Maria da Silva", "Guarulhos/Entrada", "RECEBIMENTO")
+        )
+        val data = payload.getJSONObject("data")
+
+        assertEquals("InsertLog", payload.getString("command"))
+        assertEquals("ERP", payload.getString("terminal"))
+        assertEquals("XSCAN", data.getString("provider"))
+        assertEquals("login", data.getString("source"))
+        assertEquals("1", data.getString("loglevel"))
+        assertEquals("Usuário Maria da Silva logou em Guarulhos (RECEBIMENTO)", data.getString("message"))
+    }
 
     @Test
     fun isAdminRole_matchesRoleIdAndAdminNamePrefixCaseInsensitively() {

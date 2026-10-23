@@ -101,7 +101,9 @@ object xtrack_manager {
     suspend fun login(
         xtrackUrl: String,
         username: String,
-        password: String
+        password: String,
+        locationName: String = "",
+        applicationTitle: String = "RECEBIMENTO"
     ): XTrackLoginResult = withContext(Dispatchers.IO) {
         val url = xtrackUrl.trim()
         if (url.isBlank()) {
@@ -150,6 +152,18 @@ object xtrack_manager {
                 roleId = roleId,
                 canViewUnregisteredTags = canViewUnregisteredTags
             )
+            runCatching {
+                postJson(
+                    url,
+                    buildLoginLogPayload(
+                        user.name.ifBlank { user.login },
+                        locationName,
+                        applicationTitle
+                    )
+                )
+            }.onFailure { error ->
+                Log.w(TAG, "Could not write login audit log to XTrack", error)
+            }
             _currentUser.value = user
             XTrackLoginResult.Success(user)
         }.getOrElse { e ->
@@ -199,6 +213,28 @@ object xtrack_manager {
             ?.name
             ?.trim()
             ?.startsWith("admin", ignoreCase = true) == true
+    }
+
+    internal fun buildLoginLogPayload(
+        userName: String,
+        locationName: String,
+        applicationTitle: String
+    ): String {
+        val user = userName.trim()
+        val location = locationName.trim().substringBefore('/').trim()
+        val appTitle = applicationTitle.trim()
+        return JSONObject().apply {
+            put("command", "InsertLog")
+            put("terminal", "ERP")
+            put(
+                "data",
+                JSONObject()
+                    .put("provider", "XSCAN")
+                    .put("source", "login")
+                    .put("message", "Usuário $user logou em $location ($appTitle)")
+                    .put("loglevel", "1")
+            )
+        }.toString()
     }
 
     suspend fun checkCommunication(xtrackUrl: String): Result<Unit> = withContext(Dispatchers.IO) {

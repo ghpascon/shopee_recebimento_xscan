@@ -969,11 +969,20 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
 
         val xtrackUrl = _uiState.value.appSettings.xtrackUrl.trim()
+        val rawLocationName = _uiState.value.appSettings.selectedLocationName
+            .ifBlank { _uiState.value.appSettings.selectedLocationId }
+        val receivingLocation = rawLocationName.substringBefore('/').trim()
 
         viewModelScope.launch {
             _uiState.update { it.copy(isLoggingIn = true, loginErrorMessage = null) }
 
-            when (val result = xtrack_manager.login(xtrackUrl, username, password)) {
+            when (val result = xtrack_manager.login(
+                xtrackUrl,
+                username,
+                password,
+                receivingLocation,
+                getApplication<Application>().getString(R.string.app_name)
+            )) {
                 is XTrackLoginResult.Success -> {
                     _uiState.update {
                         it.copy(
